@@ -17,8 +17,11 @@ const ARTICLES = require('./data/articles-vnexpress.json').map((article) => ({
   c: article.category,
   tags: article.tags,
   s: article.summary,
-  b: [article.summary],
+  b: article.paragraphs || [article.summary],
   source: article.url,
+  image: article.image_url || '',
+  imageAlt: article.image_alt || article.title,
+  imageCaption: article.image_caption || '',
 }));
 
 const CATEGORIES = [
@@ -108,7 +111,8 @@ const DAY = 24 * 3600 * 1000;
 const daysAgo = (d) => new Date(Date.now() - d * DAY - int(0, DAY / 1000) * 1000);
 
 function toHtml(paragraphs) {
-  return paragraphs.map((p) => (p.startsWith('## ') ? `<h2>${p.slice(3)}</h2>` : `<p>${p}</p>`)).join('\n');
+  const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return paragraphs.map((p) => (p.startsWith('## ') ? `<h2>${escape(p.slice(3))}</h2>` : `<p>${escape(p)}</p>`)).join('\n');
 }
 
 async function resetDatabase() {
@@ -176,9 +180,9 @@ async function seed({ reset = false } = {}) {
       created_at: published,
       updated_at: published,
       cover_image: {
-        url: '',
-        alt: hasSeo ? `Illustration for: ${a.t}` : '',
-        caption: '',
+        url: a.image,
+        alt: a.imageAlt,
+        caption: a.imageCaption,
       },
       seo: hasSeo
         ? { meta_title: a.t.slice(0, 70), meta_description: a.s.slice(0, 160), keywords: a.tags, canonical_url: '' }
@@ -188,9 +192,6 @@ async function seed({ reset = false } = {}) {
       is_featured: false,
     };
   });
-  // A couple of drafts for the content manager to work on.
-  docs[docs.length - 1].status = 'draft';
-  docs[docs.length - 2].status = 'draft';
   // Feature the most recent published articles.
   docs
     .filter((d) => d.status === 'published')

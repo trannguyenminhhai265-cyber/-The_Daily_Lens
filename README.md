@@ -202,6 +202,12 @@ admin actions) and `settings`.
 `backend/src/seed/` holds **60 Vietnamese summaries** of VnExpress articles across 8
 categories: Technology, Science, Business, Health, Environment, Culture, Sports and Travel.
 Each summary links to its original source; the demo author is not the original article's author.
+Most have expanded summaries, and 49 include externally hosted image URLs with attribution.
+Those images depend on the source CDN; availability and reuse rights are not guaranteed.
+One health article remains a short summary because its source could not be verified.
+For an existing seed database, `node backend/src/seed/update-articles.js` updates only
+articles whose content still matches the original seed, without resetting the database.
+It also publishes the final two seed drafts if their expanded content is unchanged.
 The seed also creates 16 users, about 140 comments (some with @mentions, plus spam and reported
 examples), likes, ratings, about 5,400 interaction logs over 90 days and about 700 search/click logs.
 Search logs are built by running each query through the real search filter, so result counts
