@@ -199,8 +199,9 @@ used to evaluate ranking quality, for example CTR@k or MRR.
 admin actions) and `settings`.
 
 ### Seed data
-`backend/src/seed/` holds **60 hand-written English articles** (no Lorem Ipsum) across 8
+`backend/src/seed/` holds **60 Vietnamese summaries** of VnExpress articles across 8
 categories: Technology, Science, Business, Health, Environment, Culture, Sports and Travel.
+Each summary links to its original source; the demo author is not the original article's author.
 The seed also creates 16 users, about 140 comments (some with @mentions, plus spam and reported
 examples), likes, ratings, about 5,400 interaction logs over 90 days and about 700 search/click logs.
 Search logs are built by running each query through the real search filter, so result counts

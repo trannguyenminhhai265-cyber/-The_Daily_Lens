@@ -12,12 +12,14 @@ const { SearchLog, InteractionLog, SystemLog } = require('../models/Logs');
 const { slugify, htmlToText, readingTime } = require('../utils/text');
 const { buildDocumentFilter } = require('../services/documents');
 
-const ARTICLES = [
-  ...require('./data/articles-tech-science'),
-  ...require('./data/articles-business-health'),
-  ...require('./data/articles-environment-culture'),
-  ...require('./data/articles-sports-travel'),
-];
+const ARTICLES = require('./data/articles-vnexpress.json').map((article) => ({
+  t: article.title,
+  c: article.category,
+  tags: article.tags,
+  s: article.summary,
+  b: [article.summary],
+  source: article.url,
+}));
 
 const CATEGORIES = [
   { name: 'Technology', slug: 'technology', color: '#2563eb', description: 'Software, gadgets, AI and the digital world.' },
@@ -85,14 +87,7 @@ const SPAM_COMMENTS = [
   'Best casino bonus here http://casino.example http://casino.example/2 http://casino.example/3',
 ];
 
-const QUERIES = [
-  'solar panels', 'inflation', 'sleep', 'marathon training', 'passkeys', 'quantum computing', 'vietnam food',
-  'electric vehicles', 'coral reefs', 'compound interest', 'jet lag', 'mediterranean diet', 'esports', 'language models',
-  'vaccines', 'crispr', 'remote work', 'fast fashion', 'night train', 'composting', 'wifi', 'emergency fund',
-  'strength training', 'bees', 'ha long bay', 'hoi an', 'football data', 'podcasts', 'vinyl records', 'climate',
-  'stress', 'antibiotics', 'travel insurance', 'hiking', 'privacy', 'open source', 'edge computing', 'water',
-  'bitcoin price', 'world cup tickets', 'pho recipe', 'stock tips',
-];
+const QUERIES = [...new Set(ARTICLES.flatMap((article) => article.tags))];
 
 // Small deterministic PRNG so every seed run produces the same data.
 function mulberry32(seed) {
@@ -162,7 +157,7 @@ async function seed({ reset = false } = {}) {
   const docs = ARTICLES.map((a, i) => {
     const age = Math.round((order.indexOf(i) / ARTICLES.length) * 360) + int(0, 4);
     const published = daysAgo(age);
-    const content = toHtml(a.b);
+    const content = `${toHtml(a.b)}\n<p>Bản tóm tắt do The Daily Lens biên soạn. <a href="${a.source}" target="_blank" rel="noopener noreferrer">Đọc bài gốc trên VnExpress</a>.</p>`;
     const content_text = htmlToText(content);
     const slug = slugify(a.t);
     const hasSeo = rand() > 0.3;
@@ -181,7 +176,7 @@ async function seed({ reset = false } = {}) {
       created_at: published,
       updated_at: published,
       cover_image: {
-        url: `https://picsum.photos/seed/${slug}/1200/675`,
+        url: '',
         alt: hasSeo ? `Illustration for: ${a.t}` : '',
         caption: '',
       },

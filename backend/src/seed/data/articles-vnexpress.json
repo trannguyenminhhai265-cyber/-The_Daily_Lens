@@ -1,0 +1,622 @@
+[
+  {
+    "title": "Hơn 48.700 doanh nghiệp giải thể trong 9 tháng",
+    "url": "https://vnexpress.net/hon-48-700-doanh-nghiep-giai-the-trong-9-thang-5127919.html",
+    "summary": "Trong chín tháng năm 2026, số doanh nghiệp hoàn tất giải thể tăng mạnh so với cùng kỳ, theo thống kê được VnExpress dẫn lại. Cơ quan quản lý đồng thời đề xuất các biện pháp hỗ trợ thuế và vốn cho hoạt động sản xuất kinh doanh.",
+    "category": "business",
+    "tags": [
+      "Doanh nghiệp",
+      "Kinh tế Việt Nam"
+    ]
+  },
+  {
+    "title": "Bốn điểm mới trong Luật Trí tuệ nhân tạo của Việt Nam",
+    "url": "https://vnexpress.net/bon-diem-moi-trong-luat-tri-tue-nhan-tao-cua-viet-nam-5046036.html",
+    "summary": "Bài viết giới thiệu cách luật tiếp cận quản lý AI theo mức độ rủi ro và nhấn mạnh vai trò kiểm soát của con người. Nội dung cũng đề cập minh bạch với sản phẩm do AI tạo ra và hỗ trợ phát triển công nghệ trong nước.",
+    "category": "technology",
+    "tags": [
+      "Trí tuệ nhân tạo",
+      "Chính sách"
+    ]
+  },
+  {
+    "title": "108 doanh nghiệp duy trì lợi nhuận tốt nhất Việt Nam suốt 10 năm",
+    "url": "https://vnexpress.net/108-doanh-nghiep-duy-tri-loi-nhuan-tot-nhat-viet-nam-suot-10-nam-5124661.html",
+    "summary": "Theo báo cáo Vietnam Report được bài viết dẫn lại, 108 doanh nghiệp liên tục góp mặt trong bảng xếp hạng lợi nhuận qua một thập kỷ. Nhóm này trải qua giai đoạn sụt giảm trong đại dịch và sau đó phục hồi.",
+    "category": "business",
+    "tags": [
+      "Doanh nghiệp",
+      "Lợi nhuận"
+    ]
+  },
+  {
+    "title": "Cả nước có gần 1,1 triệu doanh nghiệp đang hoạt động",
+    "url": "https://vnexpress.net/ca-nuoc-co-gan-1-1-trieu-doanh-nghiep-dang-hoat-dong-4996324.html",
+    "summary": "Bài báo phản ánh quy mô cộng đồng doanh nghiệp Việt Nam tại thời điểm cuối năm 2025. Nội dung cũng đề cập tốc độ thành lập doanh nghiệp và những vướng mắc còn tồn tại trong cải cách thủ tục.",
+    "category": "business",
+    "tags": [
+      "Doanh nghiệp",
+      "Kinh tế Việt Nam"
+    ]
+  },
+  {
+    "title": "Doanh nghiệp tư nhân vẫn khó tiếp cận vốn, đất đai và chuỗi cung ứng",
+    "url": "https://vnexpress.net/doanh-nghiep-tu-nhan-van-kho-tiep-can-von-dat-dai-va-chuoi-cung-ung-5135745.html",
+    "summary": "Tại một diễn đàn của VCCI, các chuyên gia nêu những rào cản đối với khu vực tư nhân như vốn, mặt bằng và liên kết sản xuất. Họ cũng bàn về nhu cầu cải thiện quản trị và khả năng chống chịu của doanh nghiệp.",
+    "category": "business",
+    "tags": [
+      "Doanh nghiệp tư nhân",
+      "Vốn"
+    ]
+  },
+  {
+    "title": "Mô hình AI tự thiết kế và cải tiến chip bán dẫn",
+    "url": "https://vnexpress.net/mo-hinh-ai-tu-thiet-ke-va-cai-tien-chip-ban-dan-5127088.html",
+    "summary": "OpenAI và Synopsys giới thiệu hướng kết hợp mô hình AI với phần mềm thiết kế chip chuyên dụng. Hệ thống được phát triển để chạy công cụ, phân tích kết quả và hỗ trợ kỹ sư điều chỉnh thiết kế.",
+    "category": "technology",
+    "tags": [
+      "Trí tuệ nhân tạo",
+      "Chip bán dẫn"
+    ]
+  },
+  {
+    "title": "Nhà khoa học Việt làm chip AI mô phỏng cơ chế não người",
+    "url": "https://vnexpress.net/nha-khoa-hoc-viet-lam-chip-ai-mo-phong-co-che-nao-nguoi-4854642.html",
+    "summary": "Nhóm EDABK tại Đại học Bách khoa Hà Nội thiết kế thử nghiệm chip AI lấy cảm hứng từ hoạt động của não. Hướng nghiên cứu này nhằm tìm cách giảm năng lượng cần cho tính toán AI.",
+    "category": "technology",
+    "tags": [
+      "Chip AI",
+      "Nghiên cứu Việt Nam"
+    ]
+  },
+  {
+    "title": "Tiến sĩ Việt chế tạo chip giúp bệnh nhân mù đọc chữ",
+    "url": "https://vnexpress.net/tien-si-viet-che-tao-chip-giup-benh-nhan-mu-doc-chu-sau-hai-tuan-cay-5122580.html",
+    "summary": "Một nhóm nghiên cứu có tiến sĩ người Việt tham gia phát triển chip võng mạc giúp một bệnh nhân nhận biết ký tự qua tín hiệu kích thích điện. Bài báo lưu ý kết quả ban đầu có cỡ mẫu nhỏ và cần theo dõi an toàn lâu dài.",
+    "category": "health",
+    "tags": [
+      "Thị giác",
+      "Công nghệ y tế"
+    ]
+  },
+  {
+    "title": "LG tạo robot hình người làm việc nhà",
+    "url": "https://vnexpress.net/lg-tao-robot-hinh-nguoi-lam-viec-nha-4998838.html",
+    "summary": "LG giới thiệu robot CLOiD với hai cánh tay và hệ thống cảm biến phục vụ tương tác trong nhà. Hãng định hướng kết hợp dữ liệu từ thiết bị gia dụng để robot hỗ trợ người dùng.",
+    "category": "technology",
+    "tags": [
+      "Robot",
+      "Nhà thông minh"
+    ]
+  },
+  {
+    "title": "Robot AI có 'hệ thần kinh' thông minh",
+    "url": "https://vnexpress.net/robot-ai-co-he-than-kinh-thong-minh-5127559.html",
+    "summary": "LimX Dynamics giới thiệu robot sử dụng kiến trúc điện tử do các đối tác Trung Quốc phát triển. Bài viết mô tả vai trò của hệ thống điều khiển, mạng và phần mềm đối với khả năng vận hành của robot.",
+    "category": "technology",
+    "tags": [
+      "Robot",
+      "Trí tuệ nhân tạo"
+    ]
+  },
+  {
+    "title": "Chip bán dẫn, robot cứu hỏa 'made in' Đại học Quốc gia TP HCM",
+    "url": "https://vnexpress.net/chip-ban-dan-robot-cuu-hoa-made-in-dai-hoc-quoc-gia-tp-hcm-5132219.html",
+    "summary": "Một triển lãm của Đại học Quốc gia TP HCM giới thiệu robot cứu hỏa, thiết kế chip và các nghiên cứu y sinh. Nhóm phát triển cho biết robot còn cần hoàn thiện và kiểm chứng trong điều kiện thực tế.",
+    "category": "science",
+    "tags": [
+      "Nghiên cứu Việt Nam",
+      "Robot"
+    ]
+  },
+  {
+    "title": "AI 'hiện thân' để bước chân vào đời thực",
+    "url": "https://vnexpress.net/ai-hien-than-de-buoc-chan-vao-doi-thuc-5128406.html",
+    "summary": "Bài viết tìm hiểu xu hướng đưa AI vào robot và các thiết bị có khả năng tương tác với môi trường vật lý. Những ứng dụng tiềm năng đi kèm trở ngại về dữ liệu và quá trình huấn luyện.",
+    "category": "technology",
+    "tags": [
+      "Trí tuệ nhân tạo",
+      "Robot"
+    ]
+  },
+  {
+    "title": "Làm gì để ngủ ngon khi đi du lịch",
+    "url": "https://vnexpress.net/lam-gi-de-ngu-ngon-khi-di-du-lich-4599495.html",
+    "summary": "Bác sĩ giải thích vì sao môi trường lạ và thay đổi múi giờ có thể làm giấc ngủ bị xáo trộn khi đi xa. Bài viết gợi ý chuẩn bị thói quen và vật dụng phù hợp để nghỉ ngơi tốt hơn.",
+    "category": "health",
+    "tags": [
+      "Giấc ngủ",
+      "Du lịch"
+    ]
+  },
+  {
+    "title": "Robot 'người nhân tạo' cử động 1.000 cơ bắp",
+    "url": "https://vnexpress.net/robot-nguoi-nhan-tao-cu-dong-1-000-co-bap-4874053.html",
+    "summary": "Clone Robotics giới thiệu Protoclone, mẫu robot mô phỏng cấu trúc cơ và xương của con người. Robot dùng các sợi cơ nhân tạo và cảm biến để tạo chuyển động.",
+    "category": "technology",
+    "tags": [
+      "Robot",
+      "Cơ nhân tạo"
+    ]
+  },
+  {
+    "title": "Xu hướng công nghệ 2026",
+    "url": "https://vnexpress.net/xu-huong-cong-nghe-2026-4999739.html",
+    "summary": "Bài tổng quan nêu các hướng công nghệ được dự đoán đáng chú ý trong năm 2026, từ tác nhân AI đến robot hình người. Điện toán lượng tử và giao diện não máy tính cũng được nhắc đến cùng những thách thức ứng dụng.",
+    "category": "technology",
+    "tags": [
+      "Xu hướng công nghệ",
+      "Trí tuệ nhân tạo"
+    ]
+  },
+  {
+    "title": "Người cao tuổi mắc bệnh xương khớp, tiểu đường có nên uống sữa?",
+    "url": "https://vnexpress.net/nguoi-cao-tuoi-mac-benh-xuong-khop-tieu-duong-co-nen-uong-sua-5108720.html",
+    "summary": "Bác sĩ trả lời câu hỏi về lựa chọn sữa phù hợp cho người cao tuổi có bệnh xương khớp và tiểu đường. Bài viết nhấn mạnh dinh dưỡng chỉ hỗ trợ và không thay thế điều trị y khoa.",
+    "category": "health",
+    "tags": [
+      "Dinh dưỡng",
+      "Người cao tuổi"
+    ]
+  },
+  {
+    "title": "Bác sĩ gợi ý hai bí quyết 'đảo ngược' lão hóa",
+    "url": "https://vnexpress.net/bac-si-goi-y-hai-bi-quyet-dao-nguoc-lao-hoa-5113995.html",
+    "summary": "Bài viết bàn về vai trò của dinh dưỡng và vận động đối với sức khỏe khi tuổi tác tăng lên. Bác sĩ giải thích rằng khả năng hấp thu một số dưỡng chất có thể thay đổi ở người lớn tuổi.",
+    "category": "health",
+    "tags": [
+      "Lão hóa",
+      "Dinh dưỡng"
+    ]
+  },
+  {
+    "title": "Vận động hợp lý để ổn định đường huyết",
+    "url": "https://vnexpress.net/van-dong-hop-ly-de-on-dinh-duong-huyet-2822430.html",
+    "summary": "Các bác sĩ được bài báo trích dẫn giải thích vai trò của vận động trong việc hỗ trợ kiểm soát đường huyết ở người tiểu đường. Hình thức tập cần phù hợp với thể trạng và độ tuổi.",
+    "category": "health",
+    "tags": [
+      "Tiểu đường",
+      "Vận động"
+    ]
+  },
+  {
+    "title": "Robot tự hành công nghệ cao",
+    "url": "https://vnexpress.net/robot-tu-hanh-cong-nghe-cao-4281106.html",
+    "summary": "Bài giới thiệu những hướng phát triển robot tự hành của Phenikaa-X trong các bối cảnh dịch vụ và sản xuất. Các giải pháp sử dụng cảm biến và thuật toán để di chuyển, nhận biết môi trường.",
+    "category": "technology",
+    "tags": [
+      "Robot",
+      "Xe tự hành"
+    ]
+  },
+  {
+    "title": "Kỷ nguyên khám phá Mặt Trăng của các công ty tư nhân",
+    "url": "https://vnexpress.net/ky-nguyen-kham-pha-mat-trang-cua-cac-cong-ty-tu-nhan-4854963.html",
+    "summary": "Các công ty tư nhân tham gia ngày càng nhiều vào các chuyến bay và nhiệm vụ đổ bộ Mặt Trăng. Bài viết phân tích sự chuyển dịch trong hoạt động thám hiểm cùng những câu hỏi về mục tiêu khoa học và thương mại.",
+    "category": "science",
+    "tags": [
+      "Mặt Trăng",
+      "Vũ trụ"
+    ]
+  },
+  {
+    "title": "Đà Nẵng dẫn đầu điểm đến nội địa năm 2025",
+    "url": "https://vnexpress.net/10-diem-den-duoc-yeu-thich-nhat-tai-viet-nam-nam-2025-4999595.html",
+    "summary": "Theo dữ liệu Booking.com, Đà Nẵng là điểm đến được khách Việt tìm kiếm nhiều nhất năm 2025, theo sau là TP HCM và Hà Nội. Phú Quốc và Hà Nội ghi nhận mức tăng tìm kiếm nơi lưu trú đáng kể so với năm trước.",
+    "category": "travel",
+    "tags": [
+      "Du lịch Việt Nam",
+      "Đà Nẵng",
+      "Điểm đến"
+    ]
+  },
+  {
+    "title": "Khách Trung Quốc dẫn đầu thị trường du lịch Việt Nam năm 2025",
+    "url": "https://vnexpress.net/khach-trung-quoc-den-viet-nam-dong-nhat-nam-2025-5002261.html",
+    "summary": "Việt Nam đón hơn 5,28 triệu lượt khách từ Trung Quốc đại lục trong năm 2025, chiếm khoảng một phần tư lượng khách quốc tế. Tổng lượng khách quốc tế trong năm đạt 21,2 triệu lượt theo số liệu được bài báo dẫn lại.",
+    "category": "travel",
+    "tags": [
+      "Khách quốc tế",
+      "Du lịch Việt Nam",
+      "Trung Quốc"
+    ]
+  },
+  {
+    "title": "Huế nhận danh hiệu điểm đến trong nước của năm",
+    "url": "https://vnexpress.net/hue-duoc-vinh-danh-diem-den-trong-nuoc-nam-2025-5008394.html",
+    "summary": "Huế được vinh danh trong khuôn khổ Hotlist Travellive Editor’s Pick 2025 sau năm có lượng khách tăng mạnh. Đại diện ngành du lịch địa phương xem giải thưởng là động lực để tiếp tục cải thiện sản phẩm và dịch vụ.",
+    "category": "travel",
+    "tags": [
+      "Huế",
+      "Du lịch",
+      "Điểm đến"
+    ]
+  },
+  {
+    "title": "Sa Pa tăng hạng trong danh sách điểm đến châu Á",
+    "url": "https://vnexpress.net/sa-pa-dan-dau-tang-truong-du-lich-chau-a-5002929.html",
+    "summary": "Dữ liệu đặt phòng quốc tế của Agoda cho thấy Sa Pa tăng từ vị trí 66 lên 51 trong bảng xếp hạng 100 điểm đến châu Á năm 2025. Đây là mức tăng thứ hạng mạnh nhất trong nhóm điểm đến được nền tảng này khảo sát.",
+    "category": "travel",
+    "tags": [
+      "Sa Pa",
+      "Du lịch châu Á",
+      "Agoda"
+    ]
+  },
+  {
+    "title": "Năm làng Việt được công nhận về du lịch cộng đồng",
+    "url": "https://vnexpress.net/5-lang-du-lich-viet-nam-duoc-vinh-danh-tot-nhat-the-gioi-4952851.html",
+    "summary": "Lô Lô Chải và Quỳnh Sơn gia nhập nhóm làng Việt Nam được UN Tourism vinh danh. Trước đó, Thái Hải, Tân Hóa và Trà Quế đã nhận danh hiệu này.",
+    "category": "travel",
+    "tags": [
+      "Du lịch cộng đồng",
+      "Làng du lịch",
+      "UN Tourism"
+    ]
+  },
+  {
+    "title": "Những ghi nhận của UNESCO đối với Việt Nam năm 2025",
+    "url": "https://vnexpress.net/6-danh-hieu-unesco-ghi-danh-cho-viet-nam-nam-2025-5000114.html",
+    "summary": "Năm 2025, nhiều giá trị của Việt Nam được UNESCO ghi nhận, từ nghề làm tranh Đông Hồ đến quần thể Yên Tử và bộ sưu tập của nhạc sĩ Hoàng Vân. Nghề tranh Đông Hồ được xếp vào danh sách di sản phi vật thể cần bảo vệ khẩn cấp.",
+    "category": "culture",
+    "tags": [
+      "UNESCO",
+      "Di sản",
+      "Đông Hồ"
+    ]
+  },
+  {
+    "title": "Cao nguyên đá Đồng Văn nhận giải thưởng điểm đến văn hóa",
+    "url": "https://vnexpress.net/cao-nguyen-da-dong-van-la-diem-den-van-hoa-hang-dau-the-gioi-2025-4990739.html",
+    "summary": "Cao nguyên đá Đồng Văn được World Travel Awards vinh danh ở hạng mục điểm đến văn hóa thế giới năm 2025. Công viên địa chất này từng được UNESCO công nhận vào năm 2010.",
+    "category": "culture",
+    "tags": [
+      "Đồng Văn",
+      "Di sản địa chất",
+      "Văn hóa"
+    ]
+  },
+  {
+    "title": "Giới thiệu di sản văn hóa tại Cột cờ Hà Nội",
+    "url": "https://vnexpress.net/trung-bay-cac-loai-hinh-di-san-van-hoa-viet-nam-4997286.html",
+    "summary": "Một triển lãm tại Cột cờ Hà Nội giới thiệu các thực hành văn hóa, nghề thủ công và lễ hội Việt Nam. Sự kiện kéo dài từ cuối tháng 12/2025 đến giữa tháng 1/2026.",
+    "category": "culture",
+    "tags": [
+      "Di sản",
+      "Triển lãm",
+      "Hà Nội"
+    ]
+  },
+  {
+    "title": "Dự án kết nối văn hóa trà Việt với phát triển bền vững",
+    "url": "https://vnexpress.net/unesco-dong-hanh-imexco-ton-vinh-gia-tri-van-hoa-tra-viet-4912862.html",
+    "summary": "Một chuỗi hoạt động tại Đà Lạt giới thiệu văn hóa trà trong khuôn khổ dự án phối hợp giữa Imexco và UNESCO. Dự án giai đoạn 2025–2029 hướng tới bảo tồn di sản và nâng cao lợi ích cho cộng đồng địa phương.",
+    "category": "culture",
+    "tags": [
+      "Văn hóa trà",
+      "UNESCO",
+      "Đà Lạt"
+    ]
+  },
+  {
+    "title": "Ba địa phương hợp tác xây dựng hành trình du lịch xanh",
+    "url": "https://vnexpress.net/ba-tinh-co-di-san-unesco-lam-tour-chung-4872436.html",
+    "summary": "Ninh Bình, Nghệ An và Thanh Hóa giới thiệu hướng hợp tác du lịch dựa trên những giá trị được UNESCO công nhận. Chương trình được công bố tại hội chợ du lịch quốc tế ở Hà Nội năm 2025.",
+    "category": "culture",
+    "tags": [
+      "Di sản",
+      "Du lịch xanh",
+      "UNESCO"
+    ]
+  },
+  {
+    "title": "Hanoi Buffaloes lần đầu vô địch giải bóng rổ VBA",
+    "url": "https://vnexpress.net/hanoi-buffaloes-gianh-chuc-vo-dich-vba-2025-4943034.html",
+    "summary": "Hanoi Buffaloes thắng Nha Trang Dolphins 95-80 ở trận quyết định để giành chức vô địch VBA 2025. Đội bóng Hà Nội khép lại loạt chung kết với kết quả 3-0.",
+    "category": "sports",
+    "tags": [
+      "Bóng rổ",
+      "VBA",
+      "Hanoi Buffaloes"
+    ]
+  },
+  {
+    "title": "Đội CAND Việt Nam II thắng chung kết giải Đông Nam Á",
+    "url": "https://vnexpress.net/viet-nam-vo-dich-giai-bong-da-cong-an-canh-sat-dong-nam-a-2025-4914732.html",
+    "summary": "CAND Việt Nam II đánh bại Campuchia 4-0 tại trận chung kết giải bóng đá Công an, Cảnh sát Đông Nam Á mở rộng năm 2025. Trận đấu diễn ra ở sân Hàng Đẫy sau hành trình toàn thắng của đội chủ nhà.",
+    "category": "sports",
+    "tags": [
+      "Bóng đá",
+      "Đông Nam Á",
+      "Công an"
+    ]
+  },
+  {
+    "title": "Việt Nam đứng thứ hai tại World Cup cầu mây 2025",
+    "url": "https://vnexpress.net/viet-nam-xep-nhi-toan-doan-world-cup-cau-may-4865960.html",
+    "summary": "Đội tuyển Việt Nam kết thúc World Cup cầu mây 2025 với một huy chương vàng, hai bạc và một đồng. Thành tích này giúp đoàn xếp sau Thái Lan trên bảng tổng sắp.",
+    "category": "sports",
+    "tags": [
+      "Cầu mây",
+      "World Cup",
+      "Thể thao Việt Nam"
+    ]
+  },
+  {
+    "title": "Wushu mang về ba huy chương cho Việt Nam ở World Games",
+    "url": "https://vnexpress.net/viet-nam-xep-sau-bon-doan-dong-nam-a-o-world-games-2025-4928441.html",
+    "summary": "Tại World Games 2025, đoàn Việt Nam giành hai huy chương bạc và một đồng, đều đến từ wushu. Kết quả chung cuộc đưa Việt Nam đứng thứ 62 trên bảng thành tích đại hội.",
+    "category": "sports",
+    "tags": [
+      "Wushu",
+      "World Games",
+      "Huy chương"
+    ]
+  },
+  {
+    "title": "Nhìn lại kết quả các môn Olympic tại SEA Games 33",
+    "url": "https://vnexpress.net/thanh-tich-cua-viet-nam-tai-sea-games-o-dau-trong-nhom-mon-olympic-4997094.html",
+    "summary": "Bài phân tích so sánh huy chương của đoàn Việt Nam tại SEA Games 33 với chương trình Olympic 2028. Trong nhóm môn có mặt ở Olympic, Việt Nam giành 62 huy chương vàng theo thống kê của bài viết.",
+    "category": "sports",
+    "tags": [
+      "SEA Games",
+      "Olympic",
+      "Thể thao Việt Nam"
+    ]
+  },
+  {
+    "title": "Bẫy ảnh ghi nhận động vật quý hiếm tại Núi Chúa",
+    "url": "https://vnexpress.net/nhung-dong-vat-quy-hiem-trong-rung-nui-chua-4847029.html",
+    "summary": "Các nhà nghiên cứu và Vườn quốc gia Núi Chúa công bố thông tin về chim, thú được ghi nhận tại khu vực. Kết quả giúp đơn vị quản lý xác định ưu tiên cho công tác bảo tồn.",
+    "category": "environment",
+    "tags": [
+      "Bảo tồn",
+      "Núi Chúa",
+      "Động vật hoang dã"
+    ]
+  },
+  {
+    "title": "Rùa núi vàng và trăn gấm được thả về tự nhiên",
+    "url": "https://vnexpress.net/tha-rua-nui-vang-va-tran-gam-ve-tu-nhien-o-cu-lao-cham-5137159.html",
+    "summary": "Động vật được đưa trở lại môi trường tự nhiên tại Cù Lao Chàm. Theo ban quản lý khu bảo tồn, rùa núi vàng góp phần phát tán hạt giống và hỗ trợ rừng tái sinh.",
+    "category": "environment",
+    "tags": [
+      "Cù Lao Chàm",
+      "Cứu hộ động vật",
+      "Bảo tồn"
+    ]
+  },
+  {
+    "title": "Học sinh thử làm viên nén từ rác nhựa và trấu",
+    "url": "https://vnexpress.net/hoc-sinh-bien-rac-thai-nhua-thanh-chat-dot-4757439.html",
+    "summary": "Một nhóm học sinh Kiên Giang thử phối trộn rác nhựa với trấu và bột đá để tạo viên nén làm chất đốt. Sản phẩm được giới thiệu tại Techfest Quảng Nam năm 2024.",
+    "category": "environment",
+    "tags": [
+      "Rác thải nhựa",
+      "Sáng kiến học sinh",
+      "Kiên Giang"
+    ]
+  },
+  {
+    "title": "Chiến dịch làm sạch bờ biển tại 28 tỉnh thành",
+    "url": "https://vnexpress.net/vingroup-lam-sach-bo-bien-tai-28-tinh-thanh-4899282.html",
+    "summary": "Quỹ Vì tương lai xanh triển khai hoạt động làm sạch bờ biển tại nhiều địa phương trong năm 2025. Chiến dịch cũng kêu gọi cộng đồng quan tâm hơn đến rác thải nhựa và bảo vệ tài nguyên biển.",
+    "category": "environment",
+    "tags": [
+      "Rác thải biển",
+      "Môi trường",
+      "Cộng đồng"
+    ]
+  },
+  {
+    "title": "Hành trình chăm sóc voi Gold tại trung tâm bảo tồn Đăk Lăk",
+    "url": "https://vnexpress.net/chu-voi-dak-lak-tu-choi-ve-rung-o-lai-tra-on-nguoi-cuu-mang-4897856.html",
+    "summary": "Voi Gold được cứu khi còn nhỏ sau khi rơi xuống giếng ở khu vực Ea Súp. Bài viết kể về quá trình chăm sóc và cuộc sống của voi tại trung tâm bảo tồn ở Đăk Lăk.",
+    "category": "environment",
+    "tags": [
+      "Voi",
+      "Đăk Lăk",
+      "Cứu hộ động vật"
+    ]
+  },
+  {
+    "title": "Việt Nam trong 20 quốc gia tốt nhất để đi du lịch",
+    "url": "https://vnexpress.net/viet-nam-trong-20-quoc-gia-tot-nhat-de-di-du-lich-4802990.html",
+    "summary": "Trong bảng bình chọn du lịch năm 2024 của Condé Nast Traveler, Việt Nam đứng thứ 15. Kết quả dựa trên đánh giá của độc giả về nhiều yếu tố, từ cảnh quan và văn hóa đến dịch vụ.",
+    "category": "travel",
+    "tags": [
+      "Du lịch Việt Nam",
+      "Điểm đến"
+    ]
+  },
+  {
+    "title": "Cách người Việt chọn điểm đến du lịch năm 2026",
+    "url": "https://vnexpress.net/cach-nguoi-viet-chon-diem-den-du-lich-nam-2026-4987029.html",
+    "summary": "Khảo sát của Agoda cho thấy nhiều du khách Việt dự định ưu tiên các chuyến đi trong nước và chú ý đến chi phí. Công nghệ trí tuệ nhân tạo cũng được quan tâm như một công cụ hỗ trợ lên lịch trình.",
+    "category": "travel",
+    "tags": [
+      "Xu hướng du lịch",
+      "Công nghệ"
+    ]
+  },
+  {
+    "title": "Du lịch Việt từ 'số 0' đến top 3 khu vực",
+    "url": "https://vnexpress.net/du-lich-viet-tu-so-0-den-top-3-khu-vuc-4932801.html",
+    "summary": "Bài viết nhìn lại sự phát triển của ngành du lịch Việt Nam qua hơn sáu thập kỷ. Năm 2024, Việt Nam đón 17,6 triệu lượt khách quốc tế, thuộc nhóm dẫn đầu Đông Nam Á.",
+    "category": "travel",
+    "tags": [
+      "Du lịch Việt Nam",
+      "Khách quốc tế"
+    ]
+  },
+  {
+    "title": "6 điểm đến Việt Nam được báo Anh gợi ý",
+    "url": "https://vnexpress.net/6-diem-den-viet-nam-duoc-bao-anh-goi-y-4895837.html",
+    "summary": "Một danh sách trên báo Anh giới thiệu các địa danh Việt Nam với cảnh quan và trải nghiệm đa dạng. Những nơi được nhắc đến bao gồm Mù Cang Chải, Quy Nhơn và Phan Thiết.",
+    "category": "travel",
+    "tags": [
+      "Điểm đến",
+      "Việt Nam"
+    ]
+  },
+  {
+    "title": "4 trải nghiệm du lịch Việt được báo Đức gợi ý",
+    "url": "https://vnexpress.net/4-trai-nghiem-du-lich-viet-duoc-bao-duc-goi-y-4658578.html",
+    "summary": "Trang Reisereporter của Đức giới thiệu những trải nghiệm có thể bị du khách bỏ qua tại bốn vùng du lịch Việt Nam. Các gợi ý trải rộng từ khám phá hang động Phong Nha đến tìm hiểu văn hóa ở Huế.",
+    "category": "travel",
+    "tags": [
+      "Trải nghiệm",
+      "Điểm đến"
+    ]
+  },
+  {
+    "title": "Việt Nam tụt 7 bậc về chỉ số phát triển du lịch",
+    "url": "https://vnexpress.net/viet-nam-tut-7-bac-ve-chi-so-phat-trien-du-lich-4749489.html",
+    "summary": "Theo báo cáo của Diễn đàn Kinh tế thế giới, Việt Nam đứng thứ 59 trong bảng chỉ số phát triển du lịch năm 2023. Báo cáo đánh giá các yếu tố như tài nguyên, điều kiện phát triển và tác động của ngành.",
+    "category": "travel",
+    "tags": [
+      "Chỉ số du lịch",
+      "Kinh tế"
+    ]
+  },
+  {
+    "title": "Giải thưởng Du lịch Việt Nam trở lại sau 5 năm",
+    "url": "https://vnexpress.net/giai-thuong-du-lich-viet-nam-tro-lai-sau-5-nam-4942243.html",
+    "summary": "Giải thưởng Du lịch Việt Nam được khởi động lại vào năm 2025 sau thời gian gián đoạn. Chương trình tôn vinh các đơn vị hoạt động trong nhiều mảng, từ lữ hành đến lưu trú.",
+    "category": "travel",
+    "tags": [
+      "Giải thưởng",
+      "Doanh nghiệp du lịch"
+    ]
+  },
+  {
+    "title": "Việt Nam 6 năm liên tiếp là Điểm đến Di sản hàng đầu thế giới",
+    "url": "https://vnexpress.net/viet-nam-6-nam-lien-tiep-la-diem-den-di-san-hang-dau-the-gioi-4820364.html",
+    "summary": "Tại lễ trao giải World Travel Awards năm 2024, Việt Nam tiếp tục được vinh danh ở hạng mục điểm đến di sản. Đây là lần thứ sáu liên tiếp nước ta nhận danh hiệu này theo bài báo.",
+    "category": "travel",
+    "tags": [
+      "Di sản",
+      "Giải thưởng"
+    ]
+  },
+  {
+    "title": "Những sự kiện khoa học vũ trụ đáng chú ý năm 2024",
+    "url": "https://vnexpress.net/nhung-su-kien-khoa-hoc-vu-tru-dang-chu-y-nam-2024-4828562.html",
+    "summary": "Năm 2024 chứng kiến nhiều nhiệm vụ đáng chú ý trên quỹ đạo và Mặt Trăng. Bài tổng hợp đề cập tàu SLIM của Nhật Bản, nhiệm vụ lấy mẫu Hằng Nga 6 và các thử nghiệm tên lửa.",
+    "category": "science",
+    "tags": [
+      "Vũ trụ",
+      "Mặt Trăng"
+    ]
+  },
+  {
+    "title": "Những sự cố khoa học vũ trụ nghiêm trọng nhất năm 2024",
+    "url": "https://vnexpress.net/nhung-su-co-khoa-hoc-vu-tru-nghiem-trong-nhat-nam-2024-4833206.html",
+    "summary": "Bài báo tổng hợp các trục trặc trong hoạt động không gian năm 2024, gồm tàu Starliner và mảnh rác từ ISS rơi xuống Florida. Các sự cố cho thấy thách thức trong vận hành tàu và quản lý vật thể trên quỹ đạo.",
+    "category": "science",
+    "tags": [
+      "Vũ trụ",
+      "An toàn"
+    ]
+  },
+  {
+    "title": "Chuyến bay tới Mặt Trăng dài bao lâu?",
+    "url": "https://vnexpress.net/chuyen-bay-toi-mat-trang-dai-bao-lau-4826300.html",
+    "summary": "Thời gian đến Mặt Trăng thay đổi theo quỹ đạo, nhiên liệu và mục tiêu của từng nhiệm vụ. Các ví dụ trong bài cho thấy một hành trình có thể kéo dài từ vài giờ đến nhiều tháng.",
+    "category": "science",
+    "tags": [
+      "Mặt Trăng",
+      "Không gian"
+    ]
+  },
+  {
+    "title": "Điều gì xảy ra với tàu Hằng Nga 6 ở vùng tối Mặt Trăng?",
+    "url": "https://vnexpress.net/dieu-gi-xay-ra-voi-tau-hang-nga-6-o-vung-toi-mat-trang-4763163.html",
+    "summary": "Nhiệm vụ Hằng Nga 6 đưa mẫu vật từ phía xa Mặt Trăng về Trái Đất. Bài viết giải thích hoạt động của tàu đổ bộ và giới hạn của nó khi bước vào đêm lạnh trên Mặt Trăng.",
+    "category": "science",
+    "tags": [
+      "Hằng Nga 6",
+      "Mặt Trăng"
+    ]
+  },
+  {
+    "title": "Cụm vệ tinh đầu tiên trong không gian Trái Đất - Mặt Trăng",
+    "url": "https://vnexpress.net/cum-ve-tinh-dau-tien-trong-khong-gian-trai-dat-mat-trang-4875124.html",
+    "summary": "Các vệ tinh của Trung Quốc thử nghiệm liên lạc và đo lường trong vùng không gian giữa Trái Đất và Mặt Trăng. Quỹ đạo xa ngược dòng được quan tâm nhờ tính ổn định và tiềm năng hỗ trợ các nhiệm vụ tương lai.",
+    "category": "science",
+    "tags": [
+      "Vệ tinh",
+      "Quỹ đạo"
+    ]
+  },
+  {
+    "title": "Doanh nghiệp, doanh nhân đóng góp 60% GDP",
+    "url": "https://vnexpress.net/doanh-nghiep-doanh-nhan-dong-gop-60-gdp-4800109.html",
+    "summary": "Tại cuộc gặp nhân Ngày Doanh nhân Việt Nam năm 2024, lãnh đạo Bộ Kế hoạch và Đầu tư nêu vai trò lớn của khu vực doanh nghiệp đối với GDP và việc làm. Bài báo cũng điểm lại số doanh nghiệp gia nhập hoặc quay lại thị trường trong chín tháng đầu năm.",
+    "category": "business",
+    "tags": [
+      "Doanh nghiệp",
+      "Kinh tế Việt Nam"
+    ]
+  },
+  {
+    "title": "Động lực kinh tế tư nhân",
+    "url": "https://vnexpress.net/dong-luc-kinh-te-tu-nhan-4834255.html",
+    "summary": "Bài viết bàn về sự phát triển của khu vực kinh tế tư nhân Việt Nam. Các ví dụ được đưa ra trải từ sản xuất ôtô, du lịch đến công nghệ và nông nghiệp ở thị trường nước ngoài.",
+    "category": "business",
+    "tags": [
+      "Kinh tế tư nhân",
+      "Doanh nghiệp"
+    ]
+  },
+  {
+    "title": "Giải APEA 2024 vinh danh 62 doanh nhân, doanh nghiệp Việt",
+    "url": "https://vnexpress.net/giai-apea-2024-vinh-danh-62-doanh-nhan-doanh-nghiep-viet-4799736.html",
+    "summary": "Giải thưởng Doanh nghiệp châu Á - Thái Bình Dương năm 2024 vinh danh 62 doanh nhân và doanh nghiệp tại TP HCM. Chương trình ghi nhận những đóng góp trong hoạt động kinh doanh và phát triển kinh tế, xã hội.",
+    "category": "business",
+    "tags": [
+      "Doanh nhân",
+      "Giải thưởng"
+    ]
+  },
+  {
+    "title": "Doanh nghiệp Việt dần tiến sâu vào ứng dụng AI",
+    "url": "https://vnexpress.net/doanh-nghiep-viet-dan-tien-sau-vao-ung-dung-ai-4724166.html",
+    "summary": "Các doanh nghiệp Việt Nam bắt đầu áp dụng AI vào những công việc chuyên biệt thay vì chỉ thử các công cụ phổ thông. Một ví dụ trong bài là dùng dữ liệu để theo dõi và đưa ra cảnh báo trong trang trại nuôi dế.",
+    "category": "business",
+    "tags": [
+      "Trí tuệ nhân tạo",
+      "Doanh nghiệp"
+    ]
+  },
+  {
+    "title": "Nông dân trồng cà phê, sầu riêng thu nhập tiền tỷ",
+    "url": "https://vnexpress.net/nong-dan-trong-ca-phe-sau-rieng-thu-nhap-tien-ty-4842517.html",
+    "summary": "Bài báo ghi nhận thu nhập của một số hộ trồng cà phê và sầu riêng trong bối cảnh giá và xuất khẩu có nhiều biến động. Người trồng chia sẻ cách áp dụng tưới tiết kiệm và quản lý sâu bệnh để nâng chất lượng sản phẩm.",
+    "category": "business",
+    "tags": [
+      "Nông nghiệp",
+      "Cà phê"
+    ]
+  },
+  {
+    "title": "Thị phần cà phê Việt tại Mỹ sụt giảm",
+    "url": "https://vnexpress.net/thi-phan-ca-phe-viet-tai-my-sut-giam-4844594.html",
+    "summary": "Theo dữ liệu được Bộ Công Thương dẫn lại, tỷ trọng cà phê Việt Nam trong lượng nhập khẩu của Mỹ giảm trong 11 tháng năm 2024 so với cùng kỳ. Lượng hàng xuất sang thị trường này cũng giảm đáng kể.",
+    "category": "business",
+    "tags": [
+      "Cà phê",
+      "Xuất khẩu"
+    ]
+  },
+  {
+    "title": "Cà phê sốt giá, nông dân tiếc vì bán sớm",
+    "url": "https://vnexpress.net/ca-phe-sot-gia-nong-dan-tiec-vi-ban-som-4738390.html",
+    "summary": "Giá cà phê nội địa tăng mạnh vào tháng 4/2024, trong khi nhiều hộ đã bán phần lớn sản lượng trước đó. Biến động giá cũng gây khó khăn cho các doanh nghiệp xuất khẩu và chế biến.",
+    "category": "business",
+    "tags": [
+      "Cà phê",
+      "Thị trường"
+    ]
+  }
+]
