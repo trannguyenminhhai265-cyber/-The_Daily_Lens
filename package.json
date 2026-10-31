@@ -1,0 +1,20 @@
+{
+  "name": "news-magazine-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "News & Digital Magazine Portal - full-stack app with CRUD, authentication, RBAC and Phase 2 search logging",
+  "scripts": {
+    "postinstall": "npm install --prefix backend && npm install --prefix frontend --include=dev",
+    "dev": "concurrently -k -n api,web -c blue,magenta \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "build": "npm run build --prefix frontend",
+    "start": "npm start --prefix backend",
+    "seed": "npm run seed --prefix backend",
+    "seed:reset": "npm run seed:reset --prefix backend"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
+  }
+}
