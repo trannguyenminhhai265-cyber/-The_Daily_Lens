@@ -6,9 +6,9 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': 'http://localhost:5000',
-      '/sitemap.xml': 'http://localhost:5000',
-      '/robots.txt': 'http://localhost:5000',
+      '/api': 'http://127.0.0.1:5001',
+      '/sitemap.xml': 'http://127.0.0.1:5001',
+      '/robots.txt': 'http://127.0.0.1:5001',
     },
   },
 });
