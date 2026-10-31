@@ -1,0 +1,25 @@
+# Render Blueprint: one web service serving both the REST API and the built React app.
+# Deploy: Render dashboard -> New -> Blueprint -> select this repository.
+services:
+  - type: web
+    name: daily-lens
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: MONGODB_URI
+        sync: false # paste your MongoDB Atlas connection string in the dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: AUTO_SEED
+        value: "true"
+      - key: SEED_ADMIN_PASSWORD
+        sync: false # optional: password for the seeded "admin" account (default Admin@123)
