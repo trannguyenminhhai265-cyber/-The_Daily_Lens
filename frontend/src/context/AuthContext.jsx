@@ -1,74 +1,89 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { api, tokenStore } from '../api';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { api } from "../api";
+import { supabase, getSupabase } from "../supabase";
 
 const AuthContext = createContext(null);
+const SITE = {
+  site_name: "The Daily Lens",
+  tagline: "News search project",
+  allow_registration: true,
+};
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [settings, setSettings] = useState({ site_name: 'The Daily Lens', tagline: '' });
   const [ready, setReady] = useState(false);
 
   const loadMe = useCallback(async () => {
-    if (!tokenStore.get()) {
+    if (!supabase || !(await supabase.auth.getSession()).data.session) {
       setUser(null);
       return;
     }
     try {
-      const { user: me } = await api('/auth/me');
+      const { user: me } = await api("/auth/me");
       setUser(me);
     } catch {
-      tokenStore.clear();
       setUser(null);
     }
   }, []);
 
-  const loadSettings = useCallback(async () => {
-    try {
-      const { settings: s } = await api('/settings/public');
-      setSettings(s);
-    } catch {
-      // keep defaults
-    }
-  }, []);
-
   useEffect(() => {
-    Promise.all([loadMe(), loadSettings()]).finally(() => setReady(true));
-  }, [loadMe, loadSettings]);
+    let mounted = true;
+    loadMe().finally(() => {
+      if (mounted) setReady(true);
+    });
+    const listener = supabase?.auth.onAuthStateChange(() => {
+      // Run outside the Auth callback's lock (RPC may need to refresh the session).
+      setTimeout(() => {
+        if (mounted) loadMe();
+      }, 0);
+    });
+    return () => {
+      mounted = false;
+      listener?.data.subscription.unsubscribe();
+    };
+  }, [loadMe]);
 
   const login = useCallback(async (loginId, password) => {
-    const data = await api('/auth/login', { method: 'POST', body: { login: loginId, password } });
-    tokenStore.set(data.token);
+    const data = await api("/auth/login", {
+      method: "POST",
+      body: { login: loginId, password },
+    });
     setUser(data.user);
     return data.user;
   }, []);
 
   const register = useCallback(async (payload) => {
-    const data = await api('/auth/register', { method: 'POST', body: payload });
-    tokenStore.set(data.token);
+    const data = await api("/auth/register", { method: "POST", body: payload });
     setUser(data.user);
-    return data.user;
+    return data;
   }, []);
 
-  const logout = useCallback(() => {
-    tokenStore.clear();
+  const logout = useCallback(async () => {
+    const { error } = await getSupabase().auth.signOut();
+    if (error) throw error;
     setUser(null);
   }, []);
 
   const value = useMemo(() => {
-    const perms = new Set(user ? user.effective_permissions : []);
+    const isAdmin = user?.role === "admin";
     return {
       user,
       setUser,
       ready,
-      settings,
-      reloadSettings: loadSettings,
+      settings: SITE,
       login,
       register,
       logout,
-      can: (...p) => p.some((x) => perms.has(x)),
-      isStaff: perms.size > 0,
+      isAdmin,
     };
-  }, [user, ready, settings, loadSettings, login, register, logout]);
+  }, [user, ready, login, register, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

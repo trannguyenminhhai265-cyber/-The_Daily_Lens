@@ -1,0 +1,25 @@
+project_id = "daily-lens"
+[auth]
+additional_redirect_urls = ["http://localhost:5173/profile", "http://localhost:5173/reset-password", "http://127.0.0.1:5173/profile", "http://127.0.0.1:5173/reset-password"]
+site_url = "http://localhost:5173"
+minimum_password_length = 8
+password_requirements = "letters_digits"
+
+[auth.email]
+enable_confirmations = true
+max_frequency = "1m0s"
+otp_length = 8
+
+[auth.sms]
+enable_confirmations = true
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[db.pooler]
+default_pool_size = 15
+max_client_conn = 200
+
+[storage.vector]
+enabled = false

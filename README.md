@@ -1,278 +1,94 @@
-# The Daily Lens — News & Digital Magazine Portal
+# The Daily Lens — đồ án search engine
 
-A full-stack news and magazine portal with complete CRUD, JWT authentication and
-Role-Based Access Control (RBAC). It also includes a **Document Data Store** and
-standardized **search/click and interaction logging**, ready for the Phase 2 search
-engine (tokenization, inverted index, BM25 / TF-IDF ranking).
+React/Vite được build thành frontend tĩnh trên Vercel, gọi trực tiếp Supabase Auth và PostgreSQL RPC. Dùng Bun; không cần server ứng dụng riêng.
 
-| Layer | Technology |
+## Chạy và kiểm tra
+
+```sh
+bun install --frozen-lockfile
+cp frontend/.env.example frontend/.env
+# Điền URL và publishable key của project Supabase
+bun run dev
+```
+
+Mở http://localhost:5173. `bun run dev` chỉ chạy frontend. Dùng `bun run preview` để xem bản build tại máy.
+
+```sh
+bun run test     # PostgreSQL WASM: schema, dữ liệu, quyền và nghiệp vụ
+bun run build    # production frontend
+bun run test:live # kiểm thử project thật bằng dữ liệu tạm, cần quyền CLI/admin
+```
+
+## Phạm vi tính năng
+
+- Đăng ký, xác nhận email, đăng nhập bằng email, quên/đổi mật khẩu.
+- Xem bài, lọc theo danh mục/tag/ngày và tìm kiếm từ khóa.
+- Admin tạo/sửa/xóa bài viết và quản lý danh mục/tag.
+- Ghi search/click logs; xem và lọc dữ liệu mô phỏng/thực tế.
+- Xuất dataset bài viết từ màn hình quản trị để triển khai indexing/ranking.
+
+Chỉ có `admin` và `user`. Vai trò nằm trong database; tự sửa metadata Auth không cấp quyền admin. Không có bình luận, like, rating, báo cáo, kiểm duyệt, SEO dashboard, cấu hình hệ thống hoặc quản trị tài khoản riêng.
+
+## Các phần đã bỏ và quan hệ database tương ứng
+
+| Nhóm tính năng đã bỏ | Phần database/code được bỏ khỏi hoạt động |
 |---|---|
-| Backend | Node.js 20+, Express 5, REST API, JWT, bcrypt |
-| Database | MongoDB (Mongoose) as the document store |
-| Frontend | React 18 + React Router (Vite), responsive CSS, light/dark mode |
-| Hosting | One Render web service + MongoDB Atlas (free tiers) |
+| Bình luận, gắn thẻ người dùng, báo cáo, kiểm duyệt | `comments`, `comment_mentions`, `reports`; các màn hình và RPC liên quan |
+| Like, rating và analytics tương tác | `likes`, `ratings`, `interaction_logs`; bỏ counter/aggregation từ bài viết |
+| SEO, biên tập nhiều trạng thái | Metadata SEO, featured, reading time, trạng thái bài; bỏ SEO Function và dashboard |
+| Năm vai trò và quyền cấp riêng | Bỏ permissions/mute/ban; thay bằng hai vai trò `admin/user` |
+| Quản trị tài khoản, cấu hình hệ thống, audit | Bỏ Edge Function `admin-users`, `settings`, `system_logs`, role metadata và các màn hình tương ứng |
+| Hồ sơ cộng đồng | Bỏ bio/avatar/public profile và lịch sử tương tác công khai |
 
----
+Không chỉ ẩn menu: các endpoint đã bỏ không còn được RPC phục vụ. Snapshot cũ chỉ nằm trong `archive`, ngoài schema hoạt động của ứng dụng.
 
-## Hướng dẫn nhanh (Quick start, Vietnamese)
+## Database đang dùng: 6 bảng
 
-```bash
-# 1. Cài toàn bộ (root + backend + frontend) — chỉ cần Node.js >= 20
-npm install
-
-# 2. Chạy chế độ phát triển: API (http://localhost:5000) + giao diện (http://localhost:5173)
-npm run dev
-```
-
-* Không cần cài MongoDB: nếu `backend/.env` không có `MONGODB_URI`, ứng dụng tự tải và chạy
-  một MongoDB nhúng (lần đầu tải ~600 MB), dữ liệu lưu ở `backend/.mongo-data`.
-* Lần chạy đầu tiên database trống nên dữ liệu mẫu (60 bài viết, 16 tài khoản, bình luận,
-  log tìm kiếm…) được **tự động seed**.
-* Chạy giống môi trường production (một cổng duy nhất): `npm run build` rồi `npm start`
-  → mở http://localhost:5000.
-* Reset dữ liệu mẫu: `npm run seed:reset`.
-
-### Demo accounts
-
-| Role | Username | Password |
-|---|---|---|
-| Super Admin | `admin` | `Admin@123` |
-| Content Manager | `editor` (also `minh_tran`, `sarah_lee`) | `Password123` |
-| Moderator | `moderator` | `Password123` |
-| Data & SEO Specialist | `seo` | `Password123` |
-| Reader | `alex_reader`, `linh_pham`, `david_kim`, … | `Password123` |
-
-The login page has one-click buttons that fill these in.
-
----
-
-## Running locally
-
-### Prerequisites
-* Node.js 20 or newer (tested with Node 24) and npm
-* Git
-* Optional: a MongoDB server or MongoDB Atlas cluster. Without one, the embedded MongoDB is used.
-
-### Steps
-```bash
-git clone <your-repo-url> daily-lens
-cd daily-lens
-npm install                      # installs root, backend and frontend dependencies
-cp backend/.env.example backend/.env   # optional, defaults work out of the box
-npm run dev
-```
-Open http://localhost:5173. Vite proxies `/api` to the Express server on port 5000.
-
-| Command (run from repo root) | What it does |
+| Bảng | Nội dung |
 |---|---|
-| `npm run dev` | API with auto-reload + Vite dev server |
-| `npm run build` | Builds the React app into `frontend/dist` |
-| `npm start` | Production server: API + built frontend on port 5000 |
-| `npm run seed` | Seeds the database if it is empty |
-| `npm run seed:reset` | Deletes all data and seeds again |
+| `profiles` | `id`, `username`, `display_name`, `role`, timestamps; liên kết Supabase Auth |
+| `documents` | `id`, `title`, `content` HTML/plain text, `content_text`, `summary`, `category_id`, `author`, `created_at`, `views_count`; thêm `slug`, ảnh `cover_url`, `source_url`, `updated_at` |
+| `categories` | `id`, `name`, `slug`, timestamps |
+| `tags` | `id`, `name`, `slug`, timestamps |
+| `document_tags` | Bảng liên kết bài viết–tag, khóa chính kép |
+| `search_logs` | `id`, `user_id`, `query_string`, `clicked_doc_id`, `timestamp`, `event`, `session_id`, `position`, `results_count`, `is_synthetic` |
 
-### Environment variables (`backend/.env`)
-| Variable | Default | Description |
-|---|---|---|
-| `PORT` | `5000` | HTTP port |
-| `MONGODB_URI` | *(empty)* | MongoDB connection string. Empty = embedded MongoDB (dev only; required in production) |
-| `EMBEDDED_DB_PORT` | `27018` | Port of the embedded MongoDB |
-| `JWT_SECRET` | dev value | Secret for signing tokens. Set a long random value in production |
-| `JWT_EXPIRES_IN` | `7d` | Token lifetime |
-| `CORS_ORIGIN` | `http://localhost:5173` | Allowed origins when the frontend is hosted elsewhere |
-| `AUTO_SEED` | `true` | Seed demo data on start-up when the database is empty |
-| `SEED_ADMIN_PASSWORD` | `Admin@123` | Password given to the seeded `admin` account. Set it on public deployments |
+`tags` trong dataset phẳng được JOIN từ `document_tags` và `tags`. `content_text` phục vụ indexing; `content` giữ cách hiển thị bài. `source_url` giữ nguồn bài viết (không phải metadata SEO).
 
----
+Log `search` có `clicked_doc_id = NULL`; log `click` có ID bài được chọn. Khách chưa đăng nhập có `user_id = NULL`, nhóm theo `session_id`. Log seed được đánh dấu `is_synthetic = true`, không dùng để tuyên bố chất lượng tìm kiếm với người dùng thật.
 
-## Deploying (Render + MongoDB Atlas)
+Tìm kiếm hiện tại mới là baseline khớp từ trong title/summary/content_text, chưa có inverted index/TF-IDF/BM25. Phần đó là công việc triển khai search engine tiếp theo.
 
-1. **Push the code to GitHub** (see *Publishing to GitHub* below).
-2. **Create the database.** Sign up at https://www.mongodb.com/atlas, create a free *M0*
-   cluster, add a database user, and under *Network Access* allow `0.0.0.0/0`.
-   Copy the connection string and add a database name, for example
-   `mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/newsportal?retryWrites=true&w=majority`.
-3. **Create the web service.** On https://render.com choose **New → Blueprint** and
-   select the repository. Render reads `render.yaml`: the build command is
-   `npm install && npm run build`, the start command is `npm start`, and a random
-   `JWT_SECRET` is generated.
-4. When asked, paste the Atlas string into **`MONGODB_URI`**, then deploy.
-5. On first start the server seeds the empty database automatically. Open
-   `https://<your-service>.onrender.com` and sign in with a demo account.
+## Code và quyền
 
-> The free Render plan sleeps after inactivity, so the first request can take about a minute.
+- `frontend/src/api.js`: Supabase Auth và RPC `portal_api`.
+- `supabase/migrations/202611110005_simplify.sql`: schema/nghiệp vụ hiện tại.
+- `tests/supabase.test.mjs`: chạy đầy đủ lịch sử migration rồi kiểm tra schema cuối cùng.
+- `scripts/seed-supabase.mjs`: tạo dataset mới, từ chối nếu đã có bài.
+- `supabase/seed-data/articles-vnexpress.json`: dataset mẫu, dùng bởi script seed Supabase.
+- `vercel.json`: cài dependency, build `frontend/dist` và rewrite đường dẫn SPA.
 
-Any Node host works the same way (Railway, Fly.io, a VPS). Build with `npm install && npm run build`,
-start with `npm start`, and set `NODE_ENV=production`, `MONGODB_URI` and `JWT_SECRET`.
+Các bảng bật RLS, không cho browser truy vấn/ghi trực tiếp. RPC trả về dữ liệu đã chọn và kiểm tra `admin` trước các thao tác quản trị. Publishable key dùng ở frontend; secret/service_role key chỉ dùng trong script quản trị, không đặt vào biến `VITE_`.
 
-### Publishing to GitHub
-```bash
-git remote add origin https://github.com/<your-username>/<repo-name>.git
-git branch -M main
-git push -u origin main
+Migration 005 lưu snapshot đầy đủ schema cũ vào schema `archive` trước khi dọn public schema. `archive` không expose cho frontend; migration giữ dữ liệu bài viết, quan hệ, tài khoản và search logs hiện có. Các migration 001–004 là lịch sử, không phải tính năng đang chạy. Không sửa hoặc xóa lịch sử migration đã deploy.
+
+## Supabase và Vercel
+
+```sh
+supabase login
+supabase link YOUR_PROJECT_REF
+supabase db push --remote --dry-run
+supabase db push --remote --yes
 ```
 
----
+Với Supabase CLI v2, `db push` mặc định dùng linked project. Không cần deploy Edge Function.
 
-## Features
+Vercel: import repository, Root Directory ở gốc; cấu hình install/build/output đã có trong `vercel.json`. Đặt `VITE_SUPABASE_URL` và `VITE_SUPABASE_PUBLISHABLE_KEY` trước khi build. Rewrite SPA cho phép mở trực tiếp các đường dẫn như `/search`, `/profile`, `/admin` ([tài liệu Vercel](https://vercel.com/docs/frameworks/frontend/vite#using-vite-to-make-spas)). Chỉ dùng publishable key ở frontend ([tài liệu Supabase](https://supabase.com/docs/guides/getting-started/api-keys)).
 
-### Client interface
-* **Home & directory:** featured stories, a paginated list of the latest articles with summary
-  snippets, most-read ranking, sections and a tag cloud.
-* **Detail view:** full HTML content, cover image, author, date, reading time, view count,
-  category, tags and related articles. Views are counted per request.
-* **Accounts:** registration, login, profile editing (name, email, bio, avatar), password
-  change and public profile pages.
-* **Engagement:** threaded comments with replies, **@username tagging** (with autocomplete; tagged
-  users see it on their profile), likes, 1–5 star ratings, sharing, and reporting of comments
-  or articles.
-* **Search & filtering (Phase 1 placeholder):** keyword search with case-insensitive regex
-  (the SQL `LIKE '%term%'` equivalent; every term must match the title, summary or body).
-  Filters: category, tag and date range, sorted by newest, oldest, most viewed or top rated.
+Trong Supabase Auth, đặt Site URL là domain Vercel và thêm URL `/profile`, `/reset-password` của domain vào Redirect URLs. Xác nhận email cần cấu hình gửi mail phù hợp; kiểm thử token không chứng minh email đã được gửi vào hộp thư thật.
 
-### Admin interface (RBAC)
-The admin menu only shows the screens the signed-in user is allowed to use. Every API
-route is also protected on the server.
+## Seed một lần
 
-| Role | Default permissions | Screens |
-|---|---|---|
-| Super Admin | all | Users & roles (assign role and extra permissions, suspend, mute, reset password), System logs, Search logs, Global settings, plus everything below |
-| Content Manager | `content:manage`, `content:publish`, `taxonomy:manage` | Articles CRUD with HTML editor and preview, publish / unpublish / archive, featured flag, Categories & Tags |
-| Moderator | `comments:moderate`, `reports:handle` | Comment queue (pending / spam / visible / hidden, bulk actions), Reports (hide comment, mute author, resolve, dismiss), mute users |
-| Data & SEO Specialist | `seo:manage`, `analytics:view` | SEO metadata editor (meta title and description with length hints, keywords, alt text, canonical URL, search-result preview), Analytics dashboard, Search logs |
+Dataset mẫu nằm tại `supabase/seed-data/articles-vnexpress.json`. Với project mới đã áp dụng migrations, đặt `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` (>=12 ký tự) và `SUPABASE_PROJECT_REF`, rồi chạy `bun run seed`. Script quản trị dùng secret key từ biến môi trường hoặc phiên Supabase CLI, không in key. Seed từ chối nếu đã có bài và không chạy trong quá trình build/deploy.
 
-**Spam control:** blocked-word list (matching comments go to the review queue), a maximum
-number of links per comment (more are marked as spam), optional "approval required" policy,
-auto-hide after N reports, and muting users.
-
-**SEO:** for every `/article/:slug` page the server injects `<title>`, the meta description
-and Open Graph tags, so crawlers and link previews see them without running JavaScript.
-`/sitemap.xml` and `/robots.txt` are generated dynamically.
-
-**Analytics:** total views, daily page views chart, views by category, top articles, top
-search queries with click-through rate, queries with zero results (content gaps) and SEO
-completeness.
-
----
-
-## Data schema & Phase 2 preparation
-
-All collections live in MongoDB. The two collections required for Phase 2:
-
-### `documents` (document store)
-| Field | Type | Notes |
-|---|---|---|
-| `_id` (`id` in JSON) | ObjectId | **required** |
-| `title` | string | **required** |
-| `content` | string (sanitized HTML) | **required** |
-| `content_text` | string | plain-text copy of `content`, ready for tokenization |
-| `summary` | string | **required** |
-| `category_id` | ObjectId → `categories` | **required** |
-| `tags` | ObjectId[] → `tags` | **required** |
-| `author` | ObjectId → `users` | **required** |
-| `created_at` | Date | **required** |
-| `views_count` | number | **required** |
-| `slug`, `status`, `published_at`, `updated_at` | | publication workflow |
-| `cover_image {url, alt, caption}`, `seo {meta_title, meta_description, keywords, canonical_url}` | | media & SEO |
-| `likes_count`, `comments_count`, `rating_avg`, `rating_count`, `reading_time`, `is_featured` | | engagement signals usable as ranking features |
-
-### `search_logs` (search & click log)
-| Field | Type | Notes |
-|---|---|---|
-| `user_id` | ObjectId \| null | **required** (null = anonymous) |
-| `query_string` | string | **required** |
-| `clicked_doc_id` | ObjectId \| null | **required**. `null` for a search event, the document id for a click |
-| `timestamp` | Date | **required** |
-| `event` | `"search"` \| `"click"` | event type |
-| `results_count` | number | number of results returned (search events) |
-| `position` | number | 1-based rank of the clicked result (click events) |
-| `session_id`, `filters` | | groups events of a session and records the filters used |
-
-A search is logged when a keyword query's first page loads. A click is logged when a
-user opens a result from the search page (`POST /api/search/click`). Together they can be
-used to evaluate ranking quality, for example CTR@k or MRR.
-
-### Other collections
-`users`, `categories`, `tags`, `comments` (with `mentions`), `likes`, `ratings`, `reports`,
-`interaction_logs` (standardized `view` / `like` / `unlike` / `rate` / `comment` events with
-`user_id`, `session_id`, `doc_id`, `timestamp`), `system_logs` (audit trail of logins and
-admin actions) and `settings`.
-
-### Seed data
-`backend/src/seed/` holds **60 Vietnamese summaries** of VnExpress articles across 8
-categories: Technology, Science, Business, Health, Environment, Culture, Sports and Travel.
-Each summary links to its original source; the demo author is not the original article's author.
-Most have expanded summaries, and 49 include externally hosted image URLs with attribution.
-Those images depend on the source CDN; availability and reuse rights are not guaranteed.
-One health article remains a short summary because its source could not be verified.
-For an existing seed database, `node backend/src/seed/update-articles.js` updates only
-articles whose content still matches the original seed, without resetting the database.
-It also publishes the final two seed drafts if their expanded content is unchanged.
-The seed also creates 16 users, about 140 comments (some with @mentions, plus spam and reported
-examples), likes, ratings, about 5,400 interaction logs over 90 days and about 700 search/click logs.
-Search logs are built by running each query through the real search filter, so result counts
-and clicked documents are consistent.
-
----
-
-## REST API overview
-
-Base URL `/api`. Send `Authorization: Bearer <token>` for protected routes.
-
-| Method & path | Access | Purpose |
-|---|---|---|
-| `POST /auth/register`, `POST /auth/login` | public | create account / sign in → `{ token, user }` |
-| `GET /auth/me`, `PUT /auth/me`, `PUT /auth/me/password` | signed in | profile |
-| `GET /documents?q=&category=&tag=&from=&to=&sort=&page=&limit=` | public | list / search / filter (logs searches) |
-| `GET /documents/:slug` | public | article detail (+1 view, related, viewer state) |
-| `POST /documents/:id/like`, `POST /documents/:id/rate` | signed in | like toggle / rating |
-| `GET/POST /documents/:id/comments` | public / signed in | comments, replies, @mentions |
-| `DELETE /comments/:id` | owner or moderator | delete comment |
-| `POST /reports` | signed in | report a comment or article |
-| `POST /search/click` | public | log a search-result click |
-| `GET /users/:username`, `GET /users/lookup?q=` | public / signed in | public profile, mention autocomplete |
-| `GET /categories`, `GET /tags` | public | taxonomy with article counts |
-| `POST/PUT/DELETE /categories/:id`, `/tags/:id` | `taxonomy:manage` | taxonomy CRUD |
-| `GET/POST/PUT/DELETE /manage/documents[/:id]` | `content:manage` | article CRUD (all statuses) |
-| `PATCH /manage/documents/:id/status` | `content:publish` | publish / unpublish / archive |
-| `PATCH /manage/documents/:id/seo` | `seo:manage` | SEO metadata & alt text |
-| `GET /moderation/comments`, `PATCH /moderation/comments/:id`, `POST /moderation/comments/bulk` | `comments:moderate` | moderation queue |
-| `GET/PATCH /moderation/reports[/:id]` | `reports:handle` | handle reports |
-| `PATCH /moderation/users/:id/mute` | `comments:moderate` | mute / unmute a reader |
-| `GET /analytics/overview?days=` | `analytics:view` | dashboard data |
-| `GET/POST/PATCH/DELETE /admin/users[/:id]` | `users:manage` | accounts, roles, permissions |
-| `GET /admin/logs`, `GET /admin/search-logs` | `logs:view` (search logs also `analytics:view`) | logs |
-| `GET/PUT /admin/settings`, `GET /settings/public` | `settings:manage` / public | global settings |
-
----
-
-## Project structure
-```
-├── package.json           # root scripts (install, dev, build, start, seed)
-├── render.yaml            # Render deployment blueprint
-├── backend/
-│   ├── .env.example
-│   └── src/
-│       ├── server.js      # bootstrap: DB connection, auto-seed, HTTP server
-│       ├── app.js         # Express app, routes, SEO meta injection, static frontend
-│       ├── config/        # env config, DB (Atlas or embedded), roles & permissions
-│       ├── middleware/    # authentication, permission checks, error handler
-│       ├── models/        # Mongoose schemas
-│       ├── routes/        # REST endpoints
-│       ├── services/      # article search, filters and counters
-│       ├── utils/         # slugify, HTML sanitizing, audit logging, pagination
-│       └── seed/          # seed script + 60 realistic articles
-└── frontend/
-    └── src/
-        ├── pages/         # Home, Article, Search, Auth, Profile
-        ├── pages/admin/   # dashboard screens per role
-        ├── components/    # layout, cards, comments, shared UI
-        └── context/       # auth & settings state
-```
-
-## Security notes
-* Passwords hashed with bcrypt, JWT authentication, permission checks on every protected route
-* Article HTML sanitized on the server (`sanitize-html`) before storage
-* Helmet security headers, rate limiting on login and registration, request size limits
-* Admin actions and logins recorded in `system_logs`
-* Demo passwords are for local testing only. Change or remove the demo accounts on a public deployment.
+Bản sao dữ liệu MongoDB và cấu hình cục bộ cũ, nếu có, nằm trong `.local-backups/`. Thư mục này được loại khỏi Git và Vercel, không được ứng dụng sử dụng.

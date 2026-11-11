@@ -1,0 +1,12 @@
+{
+  "buildCommand": "bun run build",
+  "outputDirectory": "frontend/dist",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/((?!assets/|robots.txt).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "installCommand": "bun install --frozen-lockfile"
+}

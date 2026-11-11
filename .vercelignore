@@ -1,0 +1,8 @@
+# Keep local database backups and environment files out of CLI deployments.
+.local-backups/
+**/.env
+**/.env.*
+**/node_modules/
+**/dist/
+supabase/.temp/
+supabase/.branches/

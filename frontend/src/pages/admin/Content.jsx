@@ -1,56 +1,51 @@
-// Content Manager screens: articles list, article editor, categories & tags.
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { api } from '../../api';
-import { ErrorMessage, Pagination, Spinner, StatusBadge } from '../../components/common';
-import { useAuth } from '../../context/AuthContext';
-import { useApi } from '../../hooks';
-import { compact, formatDate } from '../../utils';
+import DOMPurify from "dompurify";
+import { useEffect, useState } from "react";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
+import { api } from "../../api";
+import { ErrorMessage, Pagination, Spinner } from "../../components/common";
+import { useApi } from "../../hooks";
+import { compact, formatDate } from "../../utils";
 
 export function Articles() {
-  const { can } = useAuth();
   const [params, setParams] = useSearchParams();
   const filters = {
-    q: params.get('q') || '',
-    status: params.get('status') || '',
-    category: params.get('category') || '',
-    page: Number(params.get('page')) || 1,
+    q: params.get("q") || "",
+    category: params.get("category") || "",
+    page: Number(params.get("page")) || 1,
   };
   const [q, setQ] = useState(filters.q);
-  const { data, loading, error, reload } = useApi('/manage/documents', filters);
-  const categories = useApi('/categories');
+  const { data, loading, error, reload } = useApi("/manage/documents", filters);
+  const categories = useApi("/categories");
   const [actionError, setActionError] = useState(null);
-
   const update = (next) => {
-    const merged = { ...filters, ...next };
     const out = {};
-    Object.entries(merged).forEach(([k, v]) => {
-      if (v && !(k === 'page' && v === 1)) out[k] = String(v);
+    Object.entries({ ...filters, ...next }).forEach(([k, v]) => {
+      if (v && !(k === "page" && v === 1)) out[k] = String(v);
     });
     setParams(out);
   };
-
-  const run = async (fn) => {
+  const remove = async (doc) => {
+    if (!window.confirm(`Delete "${doc.title}"?`)) return;
     setActionError(null);
     try {
-      await fn();
+      await api(`/manage/documents/${doc.id}`, { method: "DELETE" });
       reload();
-    } catch (err) {
-      setActionError(err);
+    } catch (error) {
+      setActionError(error);
     }
   };
-
-  const setStatus = (doc, status) => run(() => api(`/manage/documents/${doc.id}/status`, { method: 'PATCH', body: { status } }));
-  const remove = (doc) => {
-    if (!window.confirm(`Delete "${doc.title}"? Comments, likes and ratings will be removed as well.`)) return;
-    run(() => api(`/manage/documents/${doc.id}`, { method: 'DELETE' }));
-  };
-
   return (
     <div>
       <div className="admin-head">
         <h1 className="admin-title">Articles</h1>
-        <Link to="/admin/articles/new" className="btn btn-primary">+ New article</Link>
+        <Link to="/admin/articles/new" className="btn btn-primary">
+          + New article
+        </Link>
       </div>
       <form
         className="filter-bar"
@@ -59,17 +54,21 @@ export function Articles() {
           update({ q, page: 1 });
         }}
       >
-        <input className="grow" placeholder="Search title or text…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select value={filters.status} onChange={(e) => update({ status: e.target.value, page: 1 })}>
-          <option value="">All statuses</option>
-          <option value="published">Published</option>
-          <option value="draft">Draft</option>
-          <option value="archived">Archived</option>
-        </select>
-        <select value={filters.category} onChange={(e) => update({ category: e.target.value, page: 1 })}>
+        <input
+          className="grow"
+          placeholder="Search title or text…"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
+        <select
+          value={filters.category}
+          onChange={(e) => update({ category: e.target.value, page: 1 })}
+        >
           <option value="">All categories</option>
-          {(categories.data ? categories.data.items : []).map((c) => (
-            <option key={c.id} value={c.slug}>{c.name}</option>
+          {categories.data?.items.map((c) => (
+            <option key={c.id} value={c.slug}>
+              {c.name}
+            </option>
           ))}
         </select>
         <button className="btn btn-ghost">Search</button>
@@ -86,8 +85,7 @@ export function Articles() {
                   <tr>
                     <th>Title</th>
                     <th>Category</th>
-                    <th>Status</th>
-                    <th>Published</th>
+                    <th>Created</th>
                     <th className="num">Views</th>
                     <th />
                   </tr>
@@ -96,30 +94,34 @@ export function Articles() {
                   {data.items.map((d) => (
                     <tr key={d.id}>
                       <td>
-                        <Link to={`/admin/articles/${d.id}`}><strong>{d.title}</strong></Link>
-                        <div className="small muted">by {d.author ? d.author.display_name : '—'} · {d.tags.map((t) => t.name).join(', ')}</div>
+                        <Link to={`/admin/articles/${d.id}`}>
+                          <strong>{d.title}</strong>
+                        </Link>
+                        <div className="small muted">
+                          {d.author?.display_name} ·{" "}
+                          {d.tags.map((t) => t.name).join(", ")}
+                        </div>
                       </td>
-                      <td>{d.category_id ? d.category_id.name : '—'}</td>
-                      <td><StatusBadge status={d.status} /></td>
-                      <td className="small">{formatDate(d.published_at) || '—'}</td>
+                      <td>{d.category_id?.name}</td>
+                      <td>{formatDate(d.created_at)}</td>
                       <td className="num">{compact(d.views_count)}</td>
                       <td className="row-actions">
-                        {d.status === 'published' && <a href={`/article/${d.slug}`} target="_blank" rel="noreferrer">View</a>}
+                        <Link to={`/article/${d.slug}`}>View</Link>
                         <Link to={`/admin/articles/${d.id}`}>Edit</Link>
-                        {can('content:publish') &&
-                          (d.status === 'published' ? (
-                            <button onClick={() => setStatus(d, 'draft')}>Unpublish</button>
-                          ) : (
-                            <button onClick={() => setStatus(d, 'published')}>Publish</button>
-                          ))}
-                        <button className="danger" onClick={() => remove(d)}>Delete</button>
+                        <button className="danger" onClick={() => remove(d)}>
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <Pagination page={data.page} pages={data.pages} onChange={(p) => update({ page: p })} />
+            <Pagination
+              page={data.page}
+              pages={data.pages}
+              onChange={(page) => update({ page })}
+            />
           </>
         )
       )}
@@ -128,71 +130,60 @@ export function Articles() {
 }
 
 const EMPTY_ARTICLE = {
-  title: '',
-  summary: '',
-  content: '',
-  category_id: '',
-  tags: '',
-  status: 'draft',
-  is_featured: false,
-  cover_image: { url: '', alt: '', caption: '' },
+  title: "",
+  summary: "",
+  content: "",
+  category_id: "",
+  tags: "",
+  cover_image: { url: "" },
+  source_url: "",
 };
-
 export function ArticleEditor() {
   const { id } = useParams();
-  const isNew = !id || id === 'new';
+  const isNew = !id;
   const navigate = useNavigate();
-  const { can } = useAuth();
-  const categories = useApi('/categories');
+  const categories = useApi("/categories");
   const [form, setForm] = useState(EMPTY_ARTICLE);
   const [loading, setLoading] = useState(!isNew);
-  const [state, setState] = useState({ busy: false, error: null, saved: false });
-  const [tab, setTab] = useState('write');
-
+  const [state, setState] = useState({
+    busy: false,
+    error: null,
+    saved: false,
+  });
+  const [preview, setPreview] = useState(false);
   useEffect(() => {
-    if (isNew) return;
+    if (isNew) {
+      setForm(EMPTY_ARTICLE);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     api(`/manage/documents/${id}`)
-      .then(({ document: d }) => {
+      .then(({ document: d }) =>
         setForm({
           title: d.title,
           summary: d.summary,
           content: d.content,
-          category_id: d.category_id ? d.category_id.id : '',
-          tags: d.tags.map((t) => t.name).join(', '),
-          status: d.status,
-          is_featured: d.is_featured,
-          cover_image: { url: d.cover_image.url, alt: d.cover_image.alt, caption: d.cover_image.caption },
+          category_id: d.category_id?.id || "",
+          tags: d.tags.map((t) => t.name).join(", "),
+          cover_image: { url: d.cover_image?.url || "" },
+          source_url: d.source_url || "",
           slug: d.slug,
-        });
-      })
+        }),
+      )
       .catch((error) => setState((s) => ({ ...s, error })))
       .finally(() => setLoading(false));
   }, [id, isNew]);
-
-  const set = (key) => (e) => setForm({ ...form, [key]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
-  const setCover = (key) => (e) => setForm({ ...form, cover_image: { ...form.cover_image, [key]: e.target.value } });
-
-  const insert = (before, after = '') => {
-    const ta = document.getElementById('content-editor');
-    const { selectionStart: s, selectionEnd: e, value } = ta;
-    const next = value.slice(0, s) + before + value.slice(s, e) + after + value.slice(e);
-    setForm({ ...form, content: next });
-    requestAnimationFrame(() => {
-      ta.focus();
-      ta.setSelectionRange(s + before.length, e + before.length);
-    });
-  };
-
+  const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
   const save = async (e) => {
     e.preventDefault();
     setState({ busy: true, error: null, saved: false });
     try {
-      const body = { ...form };
-      delete body.slug;
-      if (!can('content:publish')) delete body.status;
-      const { document: d } = isNew
-        ? await api('/manage/documents', { method: 'POST', body })
-        : await api(`/manage/documents/${id}`, { method: 'PUT', body });
+      const { slug, ...body } = form;
+      const { document: d } = await api(
+        isNew ? "/manage/documents" : `/manage/documents/${id}`,
+        { method: isNew ? "POST" : "PUT", body },
+      );
       setState({ busy: false, error: null, saved: true });
       if (isNew) navigate(`/admin/articles/${d.id}`, { replace: true });
       else setForm((f) => ({ ...f, slug: d.slug }));
@@ -200,100 +191,136 @@ export function ArticleEditor() {
       setState({ busy: false, error, saved: false });
     }
   };
-
   if (loading) return <Spinner />;
-
   return (
     <form className="form editor" onSubmit={save}>
       <div className="admin-head">
-        <h1 className="admin-title">{isNew ? 'New article' : 'Edit article'}</h1>
+        <h1 className="admin-title">
+          {isNew ? "New article" : "Edit article"}
+        </h1>
         <div className="row-actions">
-          {!isNew && form.status === 'published' && (
-            <a className="btn btn-ghost" href={`/article/${form.slug}`} target="_blank" rel="noreferrer">View live</a>
+          {form.slug && (
+            <Link className="btn btn-ghost" to={`/article/${form.slug}`}>
+              View
+            </Link>
           )}
-          <Link className="btn btn-ghost" to="/admin/articles">Back</Link>
-          <button className="btn btn-primary" disabled={state.busy}>{state.busy ? 'Saving…' : 'Save'}</button>
+          <Link className="btn btn-ghost" to="/admin/articles">
+            Back
+          </Link>
+          <button className="btn btn-primary" disabled={state.busy}>
+            {state.busy ? "Saving…" : "Save"}
+          </button>
         </div>
       </div>
       <ErrorMessage error={state.error} />
       {state.saved && <div className="alert alert-success">Article saved.</div>}
-
       <div className="editor-grid">
         <div className="editor-main">
           <label>
             Title
-            <input value={form.title} onChange={set('title')} maxLength={200} required />
+            <input
+              value={form.title}
+              onChange={set("title")}
+              maxLength={200}
+              required
+            />
           </label>
           <label>
-            Summary <span className="hint">(shown in listings, 1–2 sentences)</span>
-            <textarea rows={3} value={form.summary} onChange={set('summary')} maxLength={600} required />
+            Summary
+            <textarea
+              rows={3}
+              value={form.summary}
+              onChange={set("summary")}
+              maxLength={600}
+              required
+            />
           </label>
           <div className="tabs">
-            <button type="button" className={tab === 'write' ? 'active' : ''} onClick={() => setTab('write')}>Write (HTML)</button>
-            <button type="button" className={tab === 'preview' ? 'active' : ''} onClick={() => setTab('preview')}>Preview</button>
+            <button
+              type="button"
+              className={!preview ? "active" : ""}
+              onClick={() => setPreview(false)}
+            >
+              Content (HTML)
+            </button>
+            <button
+              type="button"
+              className={preview ? "active" : ""}
+              onClick={() => setPreview(true)}
+            >
+              Preview
+            </button>
           </div>
-          {tab === 'write' ? (
-            <>
-              <div className="toolbar">
-                <button type="button" onClick={() => insert('<p>', '</p>')}>¶</button>
-                <button type="button" onClick={() => insert('<h2>', '</h2>')}>H2</button>
-                <button type="button" onClick={() => insert('<h3>', '</h3>')}>H3</button>
-                <button type="button" onClick={() => insert('<strong>', '</strong>')}><b>B</b></button>
-                <button type="button" onClick={() => insert('<em>', '</em>')}><i>I</i></button>
-                <button type="button" onClick={() => insert('<blockquote>', '</blockquote>')}>❝</button>
-                <button type="button" onClick={() => insert('<ul>\n  <li>', '</li>\n</ul>')}>• List</button>
-                <button type="button" onClick={() => insert('<a href="https://">', '</a>')}>Link</button>
-                <button type="button" onClick={() => insert('<img src="https://" alt="', '" />')}>Image</button>
-              </div>
-              <textarea id="content-editor" className="code" rows={18} value={form.content} onChange={set('content')} required />
-            </>
+          {preview ? (
+            <div
+              className="prose preview-box"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(form.content),
+              }}
+            />
           ) : (
-            <div className="prose preview-box" dangerouslySetInnerHTML={{ __html: form.content }} />
+            <textarea
+              className="code"
+              rows={20}
+              value={form.content}
+              onChange={set("content")}
+              required
+            />
           )}
         </div>
-
         <div className="editor-side">
           <div className="card">
             <label>
-              Status
-              <select value={form.status} onChange={set('status')} disabled={!can('content:publish')}>
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-                <option value="archived">Archived</option>
-              </select>
-            </label>
-            <label className="check">
-              <input type="checkbox" checked={form.is_featured} onChange={set('is_featured')} /> Featured on home page
-            </label>
-          </div>
-          <div className="card">
-            <label>
               Category
-              <select value={form.category_id} onChange={set('category_id')} required>
+              <select
+                value={form.category_id}
+                onChange={set("category_id")}
+                required
+              >
                 <option value="">Choose…</option>
-                {(categories.data ? categories.data.items : []).map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
+                {categories.data?.items.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
                 ))}
               </select>
             </label>
             <label>
-              Tags <span className="hint">(comma separated; new tags are created)</span>
-              <input value={form.tags} onChange={set('tags')} placeholder="Climate, Energy" />
+              Tags
+              <input
+                value={form.tags}
+                onChange={set("tags")}
+                placeholder="Comma-separated names"
+              />
             </label>
           </div>
           <div className="card">
             <label>
               Cover image URL
-              <input value={form.cover_image.url} onChange={setCover('url')} placeholder="https://…" />
+              <input
+                type="url"
+                value={form.cover_image.url}
+                onChange={(e) =>
+                  setForm({ ...form, cover_image: { url: e.target.value } })
+                }
+                placeholder="https://…"
+              />
             </label>
-            {form.cover_image.url && <img className="cover-preview" src={form.cover_image.url} alt="" />}
+            {form.cover_image.url && (
+              <img
+                className="cover-preview"
+                src={form.cover_image.url}
+                alt=""
+              />
+            )}
             <label>
-              Alt text
-              <input value={form.cover_image.alt} onChange={setCover('alt')} />
-            </label>
-            <label>
-              Caption
-              <input value={form.cover_image.caption} onChange={setCover('caption')} />
+              Source URL
+              <input
+                type="url"
+                value={form.source_url}
+                onChange={set("source_url")}
+                placeholder="https://…"
+              />
             </label>
           </div>
         </div>
@@ -302,101 +329,119 @@ export function ArticleEditor() {
   );
 }
 
-function CategoryRow({ cat, onChange, others }) {
-  const [edit, setEdit] = useState(null);
+function CategoryRow({ cat, others, onChange }) {
+  const [name, setName] = useState(null);
   const [error, setError] = useState(null);
   const save = async () => {
     try {
-      await api(`/categories/${cat.id}`, { method: 'PUT', body: edit });
-      setEdit(null);
+      await api(`/categories/${cat.id}`, { method: "PUT", body: { name } });
+      setName(null);
       onChange();
-    } catch (e) {
-      setError(e);
+    } catch (error) {
+      setError(error);
     }
   };
   const remove = async () => {
-    let qs = '';
+    let suffix = "";
     if (cat.count > 0) {
       const target = window.prompt(
-        `"${cat.name}" has ${cat.count} article(s). Type the slug of the category to move them to:\n${others.map((o) => o.slug).join(', ')}`
+        `Move ${cat.count} article(s) to a category slug:\n${others.map((c) => c.slug).join(", ")}`,
       );
       if (!target) return;
-      const found = others.find((o) => o.slug === target.trim());
-      if (!found) return window.alert('Unknown category slug');
-      qs = `?reassign_to=${found.id}`;
+      const found = others.find((c) => c.slug === target.trim());
+      if (!found) {
+        setError(new Error("Choose an existing category slug"));
+        return;
+      }
+      suffix = `?reassign_to=${found.id}`;
     } else if (!window.confirm(`Delete category "${cat.name}"?`)) return;
     try {
-      await api(`/categories/${cat.id}${qs}`, { method: 'DELETE' });
+      await api(`/categories/${cat.id}${suffix}`, { method: "DELETE" });
       onChange();
-    } catch (e) {
-      setError(e);
+    } catch (error) {
+      setError(error);
     }
   };
   return (
     <tr>
-      {edit ? (
-        <>
-          <td><input value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })} /></td>
-          <td><input value={edit.description} onChange={(e) => setEdit({ ...edit, description: e.target.value })} /></td>
-          <td><input type="color" value={edit.color} onChange={(e) => setEdit({ ...edit, color: e.target.value })} /></td>
-          <td className="num">{cat.count}</td>
-          <td className="row-actions">
+      <td>
+        {name !== null ? (
+          <input
+            aria-label="Category name"
+            value={name}
+            maxLength={60}
+            onChange={(e) => setName(e.target.value)}
+          />
+        ) : (
+          <>
+            <strong>{cat.name}</strong>
+            <span className="muted small"> /{cat.slug}</span>
+          </>
+        )}
+      </td>
+      <td className="num">{cat.count}</td>
+      <td className="row-actions">
+        {name !== null ? (
+          <>
             <button onClick={save}>Save</button>
-            <button onClick={() => setEdit(null)}>Cancel</button>
-          </td>
-        </>
-      ) : (
-        <>
-          <td><span className="dot" style={{ background: cat.color }} /> <strong>{cat.name}</strong> <span className="muted small">/{cat.slug}</span></td>
-          <td className="small">{cat.description}</td>
-          <td><code>{cat.color}</code></td>
-          <td className="num">{cat.count}</td>
-          <td className="row-actions">
-            <button onClick={() => setEdit({ name: cat.name, description: cat.description, color: cat.color })}>Edit</button>
-            <button className="danger" onClick={remove}>Delete</button>
-            {error && <span className="error-text">{error.message}</span>}
-          </td>
-        </>
-      )}
+            <button onClick={() => setName(null)}>Cancel</button>
+          </>
+        ) : (
+          <>
+            <button onClick={() => setName(cat.name)}>Edit</button>
+            <button className="danger" onClick={remove}>
+              Delete
+            </button>
+          </>
+        )}
+        <ErrorMessage error={error} />
+      </td>
     </tr>
   );
 }
-
 export function Taxonomy() {
-  const categories = useApi('/categories');
-  const tags = useApi('/tags');
-  const [newCat, setNewCat] = useState({ name: '', description: '', color: '#b4232a' });
-  const [newTag, setNewTag] = useState('');
-  const [tagFilter, setTagFilter] = useState('');
-  const [error, setError] = useState(null);
-
+  const categories = useApi("/categories"),
+    tags = useApi("/tags");
+  const [newCat, setNewCat] = useState(""),
+    [newTag, setNewTag] = useState(""),
+    [tagFilter, setTagFilter] = useState(""),
+    [error, setError] = useState(null);
   const run = async (fn, after) => {
     setError(null);
     try {
       await fn();
       after();
-    } catch (e) {
-      setError(e);
+    } catch (error) {
+      setError(error);
     }
   };
-
-  const cats = categories.data ? categories.data.items : [];
-  const tagItems = (tags.data ? tags.data.items : []).filter((t) => t.name.toLowerCase().includes(tagFilter.toLowerCase()));
-
+  const cats = categories.data?.items || [],
+    tagItems = (tags.data?.items || []).filter((t) =>
+      t.name.toLowerCase().includes(tagFilter.toLowerCase()),
+    );
   return (
     <div>
-      <h1 className="admin-title">Categories & Tags</h1>
-      <ErrorMessage error={error} />
+      <h1 className="admin-title">Categories & tags</h1>
+      <ErrorMessage error={error || categories.error || tags.error} />
       <div className="card">
         <h2>Categories</h2>
         <div className="table-wrap">
           <table className="table">
             <thead>
-              <tr><th>Name</th><th>Description</th><th>Color</th><th className="num">Articles</th><th /></tr>
+              <tr>
+                <th>Name</th>
+                <th className="num">Articles</th>
+                <th />
+              </tr>
             </thead>
             <tbody>
-              {cats.map((c) => (
-                <CategoryRow key={c.id} cat={c} onChange={categories.reload} others={cats.filter((o) => o.id !== c.id)} />
+              {cats.map((cat) => (
+                <CategoryRow
+                  key={cat.id}
+                  cat={cat}
+                  others={cats.filter((c) => c.id !== cat.id)}
+                  onChange={categories.reload}
+                />
               ))}
             </tbody>
           </table>
@@ -405,34 +450,58 @@ export function Taxonomy() {
           className="filter-bar"
           onSubmit={(e) => {
             e.preventDefault();
-            run(() => api('/categories', { method: 'POST', body: newCat }), () => {
-              setNewCat({ name: '', description: '', color: '#b4232a' });
-              categories.reload();
-            });
+            run(
+              () =>
+                api("/categories", { method: "POST", body: { name: newCat } }),
+              () => {
+                setNewCat("");
+                categories.reload();
+              },
+            );
           }}
         >
-          <input placeholder="New category name" value={newCat.name} onChange={(e) => setNewCat({ ...newCat, name: e.target.value })} required />
-          <input className="grow" placeholder="Description" value={newCat.description} onChange={(e) => setNewCat({ ...newCat, description: e.target.value })} />
-          <input type="color" value={newCat.color} onChange={(e) => setNewCat({ ...newCat, color: e.target.value })} aria-label="Color" />
+          <input
+            aria-label="New category"
+            placeholder="New category name"
+            maxLength={60}
+            value={newCat}
+            onChange={(e) => setNewCat(e.target.value)}
+            required
+          />
           <button className="btn btn-primary">Add category</button>
         </form>
       </div>
-
       <div className="card">
-        <h2>Tags ({tags.data ? tags.data.items.length : 0})</h2>
+        <h2>Tags ({tags.data?.items.length || 0})</h2>
         <form
           className="filter-bar"
           onSubmit={(e) => {
             e.preventDefault();
-            run(() => api('/tags', { method: 'POST', body: { name: newTag } }), () => {
-              setNewTag('');
-              tags.reload();
-            });
+            run(
+              () => api("/tags", { method: "POST", body: { name: newTag } }),
+              () => {
+                setNewTag("");
+                tags.reload();
+              },
+            );
           }}
         >
-          <input placeholder="New tag" value={newTag} onChange={(e) => setNewTag(e.target.value)} required />
+          <input
+            aria-label="New tag"
+            placeholder="New tag"
+            maxLength={40}
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            required
+          />
           <button className="btn btn-primary">Add tag</button>
-          <input className="grow" placeholder="Filter tags…" value={tagFilter} onChange={(e) => setTagFilter(e.target.value)} />
+          <input
+            className="grow"
+            aria-label="Filter tags"
+            placeholder="Filter tags…"
+            value={tagFilter}
+            onChange={(e) => setTagFilter(e.target.value)}
+          />
         </form>
         <div className="tag-admin">
           {tagItems.map((t) => (
@@ -441,8 +510,13 @@ export function Taxonomy() {
               <button
                 title="Rename"
                 onClick={() => {
-                  const name = window.prompt('Rename tag', t.name);
-                  if (name && name !== t.name) run(() => api(`/tags/${t.id}`, { method: 'PUT', body: { name } }), tags.reload);
+                  const name = window.prompt("Rename tag", t.name);
+                  if (name && name !== t.name)
+                    run(
+                      () =>
+                        api(`/tags/${t.id}`, { method: "PUT", body: { name } }),
+                      tags.reload,
+                    );
                 }}
               >
                 ✎
@@ -450,9 +524,11 @@ export function Taxonomy() {
               <button
                 title="Delete"
                 onClick={() => {
-                  if (window.confirm(`Delete tag "${t.name}"? It will be removed from ${t.count} article(s).`)) {
-                    run(() => api(`/tags/${t.id}`, { method: 'DELETE' }), tags.reload);
-                  }
+                  if (window.confirm(`Delete tag "${t.name}"?`))
+                    run(
+                      () => api(`/tags/${t.id}`, { method: "DELETE" }),
+                      tags.reload,
+                    );
                 }}
               >
                 ×

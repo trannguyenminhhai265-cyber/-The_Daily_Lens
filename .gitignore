@@ -3,9 +3,13 @@ dist/
 .env
 .env.*
 !.env.example
-backend/.mongo-data/
+.local-backups/
+.vercel/
 *.log
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+supabase/.temp/
+supabase/.branches/
+.env.supabase
