@@ -5,7 +5,7 @@ import ArticleCard from "../components/ArticleCard";
 import { Empty, ErrorMessage, Pagination, Spinner } from "../components/common";
 import { useAuth } from "../context/AuthContext";
 import { useApi } from "../hooks";
-import { setPageMeta } from "../utils";
+import { categoryLabel, setPageMeta } from "../utils";
 
 /**
  * Search & directory page. Also serves /category/:slug and /tag/:slug.
@@ -38,10 +38,10 @@ export default function Search({ mode }) {
   const tag = tags.data && tags.data.items.find((t) => t.slug === filters.tag);
   const heading =
     mode === "category" && category
-      ? category.name
+      ? categoryLabel(category)
       : mode === "tag" && tag
         ? `#${tag.name}`
-        : "Search";
+        : "Tìm kiếm";
 
   useEffect(() => {
     setPageMeta(`${heading} | ${settings.site_name}`, undefined);
@@ -105,21 +105,21 @@ export default function Search({ mode }) {
         <input
           className="grow"
           type="search"
-          placeholder="Keywords…"
+          placeholder="Từ khóa…"
           value={draft.q}
           onChange={(e) => setDraft({ ...draft, q: e.target.value })}
-          aria-label="Keywords"
+          aria-label="Từ khóa"
         />
         {mode !== "category" && (
           <select
             value={draft.category}
             onChange={(e) => setDraft({ ...draft, category: e.target.value })}
-            aria-label="Category"
+            aria-label="Chuyên mục"
           >
-            <option value="">All categories</option>
+            <option value="">Tất cả chuyên mục</option>
             {(categories.data ? categories.data.items : []).map((c) => (
               <option key={c.id} value={c.slug}>
-                {c.name}
+                {categoryLabel(c)}
               </option>
             ))}
           </select>
@@ -128,9 +128,9 @@ export default function Search({ mode }) {
           <select
             value={draft.tag}
             onChange={(e) => setDraft({ ...draft, tag: e.target.value })}
-            aria-label="Tag"
+            aria-label="Thẻ"
           >
-            <option value="">All tags</option>
+            <option value="">Tất cả thẻ</option>
             {(tags.data ? tags.data.items : [])
               .filter((t) => t.count > 0)
               .map((t) => (
@@ -141,7 +141,7 @@ export default function Search({ mode }) {
           </select>
         )}
         <label className="inline-label">
-          From
+          Từ ngày
           <input
             type="date"
             value={draft.from}
@@ -149,7 +149,7 @@ export default function Search({ mode }) {
           />
         </label>
         <label className="inline-label">
-          To
+          Đến ngày
           <input
             type="date"
             value={draft.to}
@@ -159,15 +159,15 @@ export default function Search({ mode }) {
         <select
           value={draft.sort}
           onChange={(e) => setDraft({ ...draft, sort: e.target.value })}
-          aria-label="Sort by"
+          aria-label="Sắp xếp"
         >
-          <option value="latest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="popular">Most viewed</option>
+          <option value="latest">Mới nhất</option>
+          <option value="oldest">Cũ nhất</option>
+          <option value="popular">Xem nhiều nhất</option>
         </select>
-        <button className="btn btn-primary">Apply</button>
+        <button className="btn btn-primary">Áp dụng</button>
         <button type="button" className="btn btn-ghost" onClick={clear}>
-          Reset
+          Đặt lại
         </button>
       </form>
 
@@ -176,18 +176,17 @@ export default function Search({ mode }) {
         <Spinner />
       ) : data && data.items.length === 0 ? (
         <Empty>
-          No articles match your search. Try different keywords or remove some
-          filters.
+          Không có bài viết nào phù hợp. Hãy thử từ khóa khác hoặc bỏ bớt bộ lọc.
         </Empty>
       ) : (
         data && (
           <>
             <p className="muted result-count">
-              {data.total} result{data.total === 1 ? "" : "s"}
+              {data.total} kết quả
               {filters.q && (
                 <>
                   {" "}
-                  for <strong>“{filters.q}”</strong>
+                  cho <strong>“{filters.q}”</strong>
                 </>
               )}
             </p>

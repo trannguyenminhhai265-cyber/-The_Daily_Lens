@@ -27,7 +27,7 @@ export function MyProfile() {
     ok: false,
   });
 
-  useEffect(() => setPageMeta("My profile"), []);
+  useEffect(() => setPageMeta("Hồ sơ của tôi"), []);
 
   const saveProfile = async (e) => {
     e.preventDefault();
@@ -49,7 +49,7 @@ export function MyProfile() {
     if (pw.new_password !== pw.confirm) {
       setPwState({
         busy: false,
-        error: new Error("New passwords do not match"),
+        error: new Error("Mật khẩu mới nhập lại không khớp"),
         ok: false,
       });
       return;
@@ -77,7 +77,7 @@ export function MyProfile() {
       <header className="profile-header">
         <Avatar user={{ ...user, ...form }} size={88} />
         <div>
-          <h1>My profile</h1>
+          <h1>Hồ sơ của tôi</h1>
           <div className="muted">
             @{user.username} · {ROLE_LABELS[user.role]}
           </div>
@@ -86,15 +86,15 @@ export function MyProfile() {
 
       <div className="two-col">
         <form className="card form" onSubmit={saveProfile}>
-          <h2>Profile details</h2>
+          <h2>Thông tin cá nhân</h2>
           <ErrorMessage error={profileState.error} />
           {profileState.ok && (
             <div className="alert alert-success">
-              Profile saved. Email changes may require confirmation.
+              Đã lưu hồ sơ. Việc đổi email có thể cần xác nhận.
             </div>
           )}
           <label>
-            Display name
+            Tên hiển thị
             <input
               value={form.display_name}
               onChange={set("display_name")}
@@ -112,18 +112,18 @@ export function MyProfile() {
             />
           </label>
           <button className="btn btn-primary" disabled={profileState.busy}>
-            Save profile
+            Lưu hồ sơ
           </button>
         </form>
 
         <form className="card form" onSubmit={changePassword}>
-          <h2>Change password</h2>
+          <h2>Đổi mật khẩu</h2>
           <ErrorMessage error={pwState.error} />
           {pwState.ok && (
-            <div className="alert alert-success">Password updated.</div>
+            <div className="alert alert-success">Đã cập nhật mật khẩu.</div>
           )}
           <label>
-            Current password
+            Mật khẩu hiện tại
             <input
               type="password"
               value={pw.current_password}
@@ -134,7 +134,7 @@ export function MyProfile() {
             />
           </label>
           <label>
-            New password
+            Mật khẩu mới
             <input
               type="password"
               value={pw.new_password}
@@ -144,7 +144,7 @@ export function MyProfile() {
             />
           </label>
           <label>
-            Confirm new password
+            Nhập lại mật khẩu mới
             <input
               type="password"
               value={pw.confirm}
@@ -153,7 +153,7 @@ export function MyProfile() {
             />
           </label>
           <button className="btn btn-primary" disabled={pwState.busy}>
-            Update password
+            Cập nhật mật khẩu
           </button>
         </form>
       </div>
@@ -165,10 +165,10 @@ export function NotFound() {
   return (
     <div className="container narrow">
       <Empty>
-        <h1>Page not found</h1>
-        <p>The page you are looking for does not exist.</p>
+        <h1>Không tìm thấy trang</h1>
+        <p>Trang bạn tìm không tồn tại.</p>
         <Link to="/" className="btn btn-primary">
-          Back to home
+          Về trang chủ
         </Link>
       </Empty>
     </div>

@@ -221,16 +221,9 @@ input[type="color"] {
   text-decoration: none;
 }
 .brand-mark {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  background: var(--accent);
-  color: var(--accent-ink);
-  display: grid;
-  place-items: center;
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
 }
 .brand-name {
   font-family: var(--serif);
@@ -559,7 +552,7 @@ input[type="color"] {
   background: var(--surface);
   border-radius: 8px;
   padding: 6px 12px;
-  min-width: 38px;
+  min-width: 44px;
 }
 .pagination button.active {
   background: var(--ink);

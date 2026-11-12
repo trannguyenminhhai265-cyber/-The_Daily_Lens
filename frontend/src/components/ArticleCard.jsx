@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { compact, formatDate } from "../utils";
+import { categoryLabel, compact, formatDate } from "../utils";
 
 export function CategoryPill({ category }) {
   return category ? (
@@ -8,7 +8,7 @@ export function CategoryPill({ category }) {
       className="cat-pill"
       style={{ "--cat": "#b4232a" }}
     >
-      {category.name}
+      {categoryLabel(category)}
     </Link>
   ) : null;
 }
@@ -20,7 +20,7 @@ export default function ArticleCard({ doc, variant = "card", onOpen }) {
       <Link to={href} className="mini-card" onClick={onOpen}>
         <span className="mini-title">{doc.title}</span>
         <span className="meta">
-          {formatDate(doc.created_at)} · {compact(doc.views_count)} views
+          {formatDate(doc.created_at)} · {compact(doc.views_count)} lượt xem
         </span>
       </Link>
     );
@@ -46,10 +46,10 @@ export default function ArticleCard({ doc, variant = "card", onOpen }) {
         </h3>
         <p className="snippet">{doc.summary}</p>
         <div className="meta">
-          <span>{doc.author?.display_name || "Staff"}</span>
+          <span>{doc.author?.display_name || "Ban biên tập"}</span>
           <span>·</span>
           <time dateTime={doc.created_at}>{formatDate(doc.created_at)}</time>
-          <span className="meta-stats">{compact(doc.views_count)} views</span>
+          <span className="meta-stats">{compact(doc.views_count)} lượt xem</span>
         </div>
       </div>
     </article>
