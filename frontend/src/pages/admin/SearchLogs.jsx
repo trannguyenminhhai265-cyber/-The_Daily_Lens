@@ -4,12 +4,16 @@ import { useApi } from "../../hooks";
 import { formatDateTime } from "../../utils";
 
 const EVENT_LABELS = { search: "Tìm kiếm", click: "Nhấp chuột" };
+const ENGINE_LABELS = { keyword: "Từ khóa", vector: "Ngữ nghĩa" };
+const TYPE_LABELS = { text: "Chữ", image: "Ảnh" };
 
 export function SearchLogs() {
   const [filter, setFilter] = useState({
     event: "",
     q: "",
     source: "",
+    engine: "",
+    query_type: "",
     page: 1,
   });
   const [q, setQ] = useState("");
@@ -58,6 +62,28 @@ export function SearchLogs() {
           <option value="real">Thực tế</option>
           <option value="synthetic">Giả lập</option>
         </select>
+        <select
+          aria-label="Công cụ tìm kiếm"
+          value={filter.engine}
+          onChange={(e) =>
+            setFilter({ ...filter, engine: e.target.value, page: 1 })
+          }
+        >
+          <option value="">Mọi công cụ</option>
+          <option value="keyword">Từ khóa</option>
+          <option value="vector">Ngữ nghĩa</option>
+        </select>
+        <select
+          aria-label="Loại truy vấn"
+          value={filter.query_type}
+          onChange={(e) =>
+            setFilter({ ...filter, query_type: e.target.value, page: 1 })
+          }
+        >
+          <option value="">Chữ & ảnh</option>
+          <option value="text">Chữ</option>
+          <option value="image">Ảnh</option>
+        </select>
         <button className="btn btn-ghost">Lọc</button>
       </form>
       <ErrorMessage error={error} />
@@ -74,6 +100,8 @@ export function SearchLogs() {
                     <th>Sự kiện</th>
                     <th>Nguồn</th>
                     <th>Người dùng</th>
+                    <th>Công cụ</th>
+                    <th>Loại</th>
                     <th>Từ khóa</th>
                     <th>Bài viết được nhấp</th>
                     <th>Kết quả / vị trí</th>
@@ -96,8 +124,18 @@ export function SearchLogs() {
                           ? l.user_id?.username || "ẩn danh"
                           : l.user_id || "ẩn danh"}
                       </td>
+                      <td className="small">
+                        {ENGINE_LABELS[l.engine] || l.engine || "—"}
+                      </td>
+                      <td className="small">
+                        {TYPE_LABELS[l.query_type] || l.query_type || "—"}
+                      </td>
                       <td>
-                        <code>{l.query_string}</code>
+                        {l.query_string ? (
+                          <code>{l.query_string}</code>
+                        ) : l.query_type === "image" ? (
+                          <span className="muted small">(ảnh)</span>
+                        ) : null}
                       </td>
                       <td className="small">
                         {l.clicked_doc_id &&

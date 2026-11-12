@@ -10,6 +10,7 @@ const NAV = [
   { to: "/admin", label: "Tổng quan", end: true },
   { to: "/admin/articles", label: "Bài viết" },
   { to: "/admin/taxonomy", label: "Chuyên mục & thẻ" },
+  { to: "/admin/search-engine", label: "Search Engine" },
   { to: "/admin/search-logs", label: "Nhật ký tìm kiếm" },
 ];
 export default function AdminLayout() {

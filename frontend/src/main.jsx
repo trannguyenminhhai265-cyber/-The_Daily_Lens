@@ -12,6 +12,7 @@ import { MyProfile, NotFound } from "./pages/Profile";
 import AdminLayout, { Dashboard } from "./pages/admin/AdminLayout";
 import { ArticleEditor, Articles, Taxonomy } from "./pages/admin/Content";
 import { SearchLogs } from "./pages/admin/SearchLogs";
+import { SearchEngine } from "./pages/admin/SearchEngine";
 import "./styles.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -49,6 +50,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Route
                 path="taxonomy"
                 element={<Taxonomy />}
+              />
+              <Route
+                path="search-engine"
+                element={<SearchEngine />}
               />
               <Route
                 path="search-logs"

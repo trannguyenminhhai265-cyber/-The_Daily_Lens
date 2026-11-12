@@ -6,7 +6,7 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { api } from "../../api";
+import { api, indexDocument } from "../../api";
 import { ErrorMessage, Pagination, Spinner } from "../../components/common";
 import { useApi } from "../../hooks";
 import { categoryLabel, compact, formatDate } from "../../utils";
@@ -185,6 +185,10 @@ export function ArticleEditor() {
         { method: isNew ? "POST" : "PUT", body },
       );
       setState({ busy: false, error: null, saved: true });
+      // Rebuild search embeddings in the background; never blocks or fails the save.
+      indexDocument(d.id).catch((err) =>
+        console.warn("Không thể cập nhật chỉ mục tìm kiếm:", err.message),
+      );
       if (isNew) navigate(`/admin/articles/${d.id}`, { replace: true });
       else setForm((f) => ({ ...f, slug: d.slug }));
     } catch (error) {
