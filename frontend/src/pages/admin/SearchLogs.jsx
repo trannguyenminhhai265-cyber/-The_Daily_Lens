@@ -3,6 +3,8 @@ import { ErrorMessage, Pagination, Spinner } from "../../components/common";
 import { useApi } from "../../hooks";
 import { formatDateTime } from "../../utils";
 
+const EVENT_LABELS = { search: "Tìm kiếm", click: "Nhấp chuột" };
+
 export function SearchLogs() {
   const [filter, setFilter] = useState({
     event: "",
@@ -14,11 +16,11 @@ export function SearchLogs() {
   const { data, loading, error } = useApi("/admin/search-logs", filter);
   return (
     <div>
-      <h1 className="admin-title">Search & click logs</h1>
+      <h1 className="admin-title">Nhật ký tìm kiếm & nhấp chuột</h1>
       <p className="muted small">
-        Search events have no clicked document. Click events record the selected
-        article and its position. Synthetic logs are demo data, not real user
-        behavior.
+        Sự kiện tìm kiếm không có bài viết được nhấp. Sự kiện nhấp chuột ghi lại
+        bài viết được chọn và vị trí của nó. Nhật ký giả lập chỉ là dữ liệu
+        demo, không phản ánh hành vi người dùng thật.
       </p>
       <form
         className="filter-bar"
@@ -29,34 +31,34 @@ export function SearchLogs() {
       >
         <input
           className="grow"
-          aria-label="Query filter"
-          placeholder="Query contains…"
+          aria-label="Lọc theo từ khóa"
+          placeholder="Từ khóa chứa…"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
         <select
-          aria-label="Event"
+          aria-label="Sự kiện"
           value={filter.event}
           onChange={(e) =>
             setFilter({ ...filter, event: e.target.value, page: 1 })
           }
         >
-          <option value="">Searches & clicks</option>
-          <option value="search">Searches</option>
-          <option value="click">Clicks</option>
+          <option value="">Tìm kiếm & nhấp chuột</option>
+          <option value="search">Tìm kiếm</option>
+          <option value="click">Nhấp chuột</option>
         </select>
         <select
-          aria-label="Log source"
+          aria-label="Nguồn nhật ký"
           value={filter.source}
           onChange={(e) =>
             setFilter({ ...filter, source: e.target.value, page: 1 })
           }
         >
-          <option value="">All sources</option>
-          <option value="real">Recorded</option>
-          <option value="synthetic">Synthetic</option>
+          <option value="">Tất cả nguồn</option>
+          <option value="real">Thực tế</option>
+          <option value="synthetic">Giả lập</option>
         </select>
-        <button className="btn btn-ghost">Filter</button>
+        <button className="btn btn-ghost">Lọc</button>
       </form>
       <ErrorMessage error={error} />
       {loading && !data ? (
@@ -68,13 +70,13 @@ export function SearchLogs() {
               <table className="table table-compact">
                 <thead>
                   <tr>
-                    <th>Timestamp</th>
-                    <th>Event</th>
-                    <th>Source</th>
-                    <th>User</th>
-                    <th>Query</th>
-                    <th>Clicked article</th>
-                    <th>Results / position</th>
+                    <th>Thời gian</th>
+                    <th>Sự kiện</th>
+                    <th>Nguồn</th>
+                    <th>Người dùng</th>
+                    <th>Từ khóa</th>
+                    <th>Bài viết được nhấp</th>
+                    <th>Kết quả / vị trí</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -83,16 +85,16 @@ export function SearchLogs() {
                       <td className="small nowrap">
                         {formatDateTime(l.timestamp)}
                       </td>
-                      <td>{l.event}</td>
+                      <td>{EVENT_LABELS[l.event] || l.event}</td>
                       <td>
                         <span className="badge">
-                          {l.is_synthetic ? "Synthetic" : "Recorded"}
+                          {l.is_synthetic ? "Giả lập" : "Thực tế"}
                         </span>
                       </td>
                       <td className="small">
                         {typeof l.user_id === "object"
-                          ? l.user_id?.username || "anonymous"
-                          : l.user_id || "anonymous"}
+                          ? l.user_id?.username || "ẩn danh"
+                          : l.user_id || "ẩn danh"}
                       </td>
                       <td>
                         <code>{l.query_string}</code>

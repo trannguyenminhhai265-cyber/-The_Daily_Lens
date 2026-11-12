@@ -7,20 +7,20 @@ import { useApi } from "../../hooks";
 import { compact, setPageMeta } from "../../utils";
 
 const NAV = [
-  { to: "/admin", label: "Overview", end: true },
-  { to: "/admin/articles", label: "Articles" },
-  { to: "/admin/taxonomy", label: "Categories & tags" },
-  { to: "/admin/search-logs", label: "Search logs" },
+  { to: "/admin", label: "Tổng quan", end: true },
+  { to: "/admin/articles", label: "Bài viết" },
+  { to: "/admin/taxonomy", label: "Chuyên mục & thẻ" },
+  { to: "/admin/search-logs", label: "Nhật ký tìm kiếm" },
 ];
 export default function AdminLayout() {
   const { user } = useAuth();
-  useEffect(() => setPageMeta("Admin dashboard"), []);
+  useEffect(() => setPageMeta("Trang quản trị"), []);
   return (
     <div className="admin">
       <aside className="admin-nav">
         <div className="admin-user">
           <strong>{user.display_name}</strong>
-          <span className="badge badge-role">Admin</span>
+          <span className="badge badge-role">Quản trị viên</span>
         </div>
         <nav>
           {NAV.map((n) => (
@@ -30,7 +30,7 @@ export default function AdminLayout() {
           ))}
         </nav>
         <Link to="/" className="small muted back-site">
-          ← Back to site
+          ← Về trang web
         </Link>
       </aside>
       <section className="admin-content">
@@ -64,13 +64,13 @@ export function Dashboard() {
   return (
     <div>
       <div className="admin-head">
-        <h1 className="admin-title">Dataset overview</h1>
+        <h1 className="admin-title">Tổng quan dữ liệu</h1>
         <button
           className="btn btn-primary"
           disabled={exportState.busy}
           onClick={download}
         >
-          {exportState.busy ? "Exporting…" : "Download dataset JSON"}
+          {exportState.busy ? "Đang xuất…" : "Tải dữ liệu JSON"}
         </button>
       </div>
       <ErrorMessage error={error || exportState.error} />
@@ -80,11 +80,11 @@ export function Dashboard() {
         data && (
           <div className="tiles">
             {[
-              ["documents", "Articles", "/admin/articles"],
-              ["categories", "Categories", "/admin/taxonomy"],
-              ["tags", "Tags", "/admin/taxonomy"],
-              ["searches", "Searches", "/admin/search-logs"],
-              ["clicks", "Clicks", "/admin/search-logs"],
+              ["documents", "Bài viết", "/admin/articles"],
+              ["categories", "Chuyên mục", "/admin/taxonomy"],
+              ["tags", "Thẻ", "/admin/taxonomy"],
+              ["searches", "Lượt tìm kiếm", "/admin/search-logs"],
+              ["clicks", "Lượt nhấp", "/admin/search-logs"],
             ].map(([key, label, to]) => (
               <Link key={key} to={to} className="tile">
                 <span className="tile-value">{compact(data.totals[key])}</span>
@@ -95,8 +95,8 @@ export function Dashboard() {
         )
       )}
       <p className="muted small">
-        Search logs include synthetic seed data. Use the source filter when
-        reviewing recorded searches.
+        Nhật ký tìm kiếm có chứa dữ liệu giả lập. Hãy dùng bộ lọc nguồn khi
+        xem các lượt tìm kiếm thực tế.
       </p>
     </div>
   );

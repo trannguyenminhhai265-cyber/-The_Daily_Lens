@@ -4,7 +4,7 @@ import ArticleCard from "../components/ArticleCard";
 import { ErrorMessage, Pagination, Spinner } from "../components/common";
 import { useAuth } from "../context/AuthContext";
 import { useApi } from "../hooks";
-import { setPageMeta } from "../utils";
+import { categoryLabel, setPageMeta } from "../utils";
 
 export default function Home() {
   const { settings } = useAuth();
@@ -36,7 +36,7 @@ export default function Home() {
     <div className="container">
       <div className="with-sidebar">
         <section id="latest">
-          <h2 className="section-title">Latest stories</h2>
+          <h2 className="section-title">Tin mới nhất</h2>
           <ErrorMessage error={latest.error} />
           {latest.loading && !latest.data ? (
             <Spinner />
@@ -60,7 +60,7 @@ export default function Home() {
 
         <aside className="sidebar">
           <div className="side-block">
-            <h3 className="side-title">Most read</h3>
+            <h3 className="side-title">Đọc nhiều nhất</h3>
             <ol className="ranked">
               {(popular.data ? popular.data.items : []).map((d) => (
                 <li key={d.id}>
@@ -70,13 +70,13 @@ export default function Home() {
             </ol>
           </div>
           <div className="side-block">
-            <h3 className="side-title">Sections</h3>
+            <h3 className="side-title">Chuyên mục</h3>
             <ul className="cat-list">
               {(categories.data ? categories.data.items : []).map((c) => (
                 <li key={c.id}>
                   <Link to={`/category/${c.slug}`}>
                     <span className="dot" style={{ background: "#b4232a" }} />
-                    {c.name}
+                    {categoryLabel(c)}
                     <span className="muted">{c.count}</span>
                   </Link>
                 </li>
@@ -84,7 +84,7 @@ export default function Home() {
             </ul>
           </div>
           <div className="side-block">
-            <h3 className="side-title">Popular tags</h3>
+            <h3 className="side-title">Thẻ phổ biến</h3>
             <div className="tag-cloud">
               {topTags.map((t) => (
                 <Link key={t.id} to={`/tag/${t.slug}`} className="tag">

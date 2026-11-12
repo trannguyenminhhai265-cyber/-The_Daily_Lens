@@ -9,7 +9,7 @@ import {
 import { api } from "../../api";
 import { ErrorMessage, Pagination, Spinner } from "../../components/common";
 import { useApi } from "../../hooks";
-import { compact, formatDate } from "../../utils";
+import { categoryLabel, compact, formatDate } from "../../utils";
 
 export function Articles() {
   const [params, setParams] = useSearchParams();
@@ -30,7 +30,7 @@ export function Articles() {
     setParams(out);
   };
   const remove = async (doc) => {
-    if (!window.confirm(`Delete "${doc.title}"?`)) return;
+    if (!window.confirm(`Xóa bài viết "${doc.title}"?`)) return;
     setActionError(null);
     try {
       await api(`/manage/documents/${doc.id}`, { method: "DELETE" });
@@ -42,9 +42,9 @@ export function Articles() {
   return (
     <div>
       <div className="admin-head">
-        <h1 className="admin-title">Articles</h1>
+        <h1 className="admin-title">Bài viết</h1>
         <Link to="/admin/articles/new" className="btn btn-primary">
-          + New article
+          + Bài viết mới
         </Link>
       </div>
       <form
@@ -56,7 +56,7 @@ export function Articles() {
       >
         <input
           className="grow"
-          placeholder="Search title or text…"
+          placeholder="Tìm theo tiêu đề hoặc nội dung…"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -64,14 +64,14 @@ export function Articles() {
           value={filters.category}
           onChange={(e) => update({ category: e.target.value, page: 1 })}
         >
-          <option value="">All categories</option>
+          <option value="">Tất cả chuyên mục</option>
           {categories.data?.items.map((c) => (
             <option key={c.id} value={c.slug}>
               {c.name}
             </option>
           ))}
         </select>
-        <button className="btn btn-ghost">Search</button>
+        <button className="btn btn-ghost">Tìm</button>
       </form>
       <ErrorMessage error={error || actionError} />
       {loading && !data ? (
@@ -83,10 +83,10 @@ export function Articles() {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Created</th>
-                    <th className="num">Views</th>
+                    <th>Tiêu đề</th>
+                    <th>Chuyên mục</th>
+                    <th>Ngày tạo</th>
+                    <th className="num">Lượt xem</th>
                     <th />
                   </tr>
                 </thead>
@@ -102,14 +102,14 @@ export function Articles() {
                           {d.tags.map((t) => t.name).join(", ")}
                         </div>
                       </td>
-                      <td>{d.category_id?.name}</td>
+                      <td>{categoryLabel(d.category_id)}</td>
                       <td>{formatDate(d.created_at)}</td>
                       <td className="num">{compact(d.views_count)}</td>
                       <td className="row-actions">
-                        <Link to={`/article/${d.slug}`}>View</Link>
-                        <Link to={`/admin/articles/${d.id}`}>Edit</Link>
+                        <Link to={`/article/${d.slug}`}>Xem</Link>
+                        <Link to={`/admin/articles/${d.id}`}>Sửa</Link>
                         <button className="danger" onClick={() => remove(d)}>
-                          Delete
+                          Xóa
                         </button>
                       </td>
                     </tr>
@@ -196,28 +196,28 @@ export function ArticleEditor() {
     <form className="form editor" onSubmit={save}>
       <div className="admin-head">
         <h1 className="admin-title">
-          {isNew ? "New article" : "Edit article"}
+          {isNew ? "Bài viết mới" : "Sửa bài viết"}
         </h1>
         <div className="row-actions">
           {form.slug && (
             <Link className="btn btn-ghost" to={`/article/${form.slug}`}>
-              View
+              Xem
             </Link>
           )}
           <Link className="btn btn-ghost" to="/admin/articles">
-            Back
+            Quay lại
           </Link>
           <button className="btn btn-primary" disabled={state.busy}>
-            {state.busy ? "Saving…" : "Save"}
+            {state.busy ? "Đang lưu…" : "Lưu"}
           </button>
         </div>
       </div>
       <ErrorMessage error={state.error} />
-      {state.saved && <div className="alert alert-success">Article saved.</div>}
+      {state.saved && <div className="alert alert-success">Đã lưu bài viết.</div>}
       <div className="editor-grid">
         <div className="editor-main">
           <label>
-            Title
+            Tiêu đề
             <input
               value={form.title}
               onChange={set("title")}
@@ -226,7 +226,7 @@ export function ArticleEditor() {
             />
           </label>
           <label>
-            Summary
+            Tóm tắt
             <textarea
               rows={3}
               value={form.summary}
@@ -241,14 +241,14 @@ export function ArticleEditor() {
               className={!preview ? "active" : ""}
               onClick={() => setPreview(false)}
             >
-              Content (HTML)
+              Nội dung (HTML)
             </button>
             <button
               type="button"
               className={preview ? "active" : ""}
               onClick={() => setPreview(true)}
             >
-              Preview
+              Xem trước
             </button>
           </div>
           {preview ? (
@@ -271,13 +271,13 @@ export function ArticleEditor() {
         <div className="editor-side">
           <div className="card">
             <label>
-              Category
+              Chuyên mục
               <select
                 value={form.category_id}
                 onChange={set("category_id")}
                 required
               >
-                <option value="">Choose…</option>
+                <option value="">Chọn…</option>
                 {categories.data?.items.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -286,17 +286,17 @@ export function ArticleEditor() {
               </select>
             </label>
             <label>
-              Tags
+              Thẻ
               <input
                 value={form.tags}
                 onChange={set("tags")}
-                placeholder="Comma-separated names"
+                placeholder="Các thẻ, phân cách bằng dấu phẩy"
               />
             </label>
           </div>
           <div className="card">
             <label>
-              Cover image URL
+              URL ảnh bìa
               <input
                 type="url"
                 value={form.cover_image.url}
@@ -314,7 +314,7 @@ export function ArticleEditor() {
               />
             )}
             <label>
-              Source URL
+              URL nguồn
               <input
                 type="url"
                 value={form.source_url}
@@ -345,16 +345,16 @@ function CategoryRow({ cat, others, onChange }) {
     let suffix = "";
     if (cat.count > 0) {
       const target = window.prompt(
-        `Move ${cat.count} article(s) to a category slug:\n${others.map((c) => c.slug).join(", ")}`,
+        `Chuyển ${cat.count} bài viết sang chuyên mục (nhập slug):\n${others.map((c) => c.slug).join(", ")}`,
       );
       if (!target) return;
       const found = others.find((c) => c.slug === target.trim());
       if (!found) {
-        setError(new Error("Choose an existing category slug"));
+        setError(new Error("Hãy nhập slug của một chuyên mục có sẵn"));
         return;
       }
       suffix = `?reassign_to=${found.id}`;
-    } else if (!window.confirm(`Delete category "${cat.name}"?`)) return;
+    } else if (!window.confirm(`Xóa chuyên mục "${categoryLabel(cat)}"?`)) return;
     try {
       await api(`/categories/${cat.id}${suffix}`, { method: "DELETE" });
       onChange();
@@ -367,14 +367,14 @@ function CategoryRow({ cat, others, onChange }) {
       <td>
         {name !== null ? (
           <input
-            aria-label="Category name"
+            aria-label="Tên chuyên mục"
             value={name}
             maxLength={60}
             onChange={(e) => setName(e.target.value)}
           />
         ) : (
           <>
-            <strong>{cat.name}</strong>
+            <strong>{categoryLabel(cat)}</strong>
             <span className="muted small"> /{cat.slug}</span>
           </>
         )}
@@ -383,14 +383,14 @@ function CategoryRow({ cat, others, onChange }) {
       <td className="row-actions">
         {name !== null ? (
           <>
-            <button onClick={save}>Save</button>
-            <button onClick={() => setName(null)}>Cancel</button>
+            <button onClick={save}>Lưu</button>
+            <button onClick={() => setName(null)}>Hủy</button>
           </>
         ) : (
           <>
-            <button onClick={() => setName(cat.name)}>Edit</button>
+            <button onClick={() => setName(cat.name)}>Sửa</button>
             <button className="danger" onClick={remove}>
-              Delete
+              Xóa
             </button>
           </>
         )}
@@ -421,16 +421,16 @@ export function Taxonomy() {
     );
   return (
     <div>
-      <h1 className="admin-title">Categories & tags</h1>
+      <h1 className="admin-title">Chuyên mục & thẻ</h1>
       <ErrorMessage error={error || categories.error || tags.error} />
       <div className="card">
-        <h2>Categories</h2>
+        <h2>Chuyên mục</h2>
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th className="num">Articles</th>
+                <th>Tên</th>
+                <th className="num">Bài viết</th>
                 <th />
               </tr>
             </thead>
@@ -461,18 +461,18 @@ export function Taxonomy() {
           }}
         >
           <input
-            aria-label="New category"
-            placeholder="New category name"
+            aria-label="Chuyên mục mới"
+            placeholder="Tên chuyên mục mới"
             maxLength={60}
             value={newCat}
             onChange={(e) => setNewCat(e.target.value)}
             required
           />
-          <button className="btn btn-primary">Add category</button>
+          <button className="btn btn-primary">Thêm chuyên mục</button>
         </form>
       </div>
       <div className="card">
-        <h2>Tags ({tags.data?.items.length || 0})</h2>
+        <h2>Thẻ ({tags.data?.items.length || 0})</h2>
         <form
           className="filter-bar"
           onSubmit={(e) => {
@@ -487,18 +487,18 @@ export function Taxonomy() {
           }}
         >
           <input
-            aria-label="New tag"
-            placeholder="New tag"
+            aria-label="Thẻ mới"
+            placeholder="Thẻ mới"
             maxLength={40}
             value={newTag}
             onChange={(e) => setNewTag(e.target.value)}
             required
           />
-          <button className="btn btn-primary">Add tag</button>
+          <button className="btn btn-primary">Thêm thẻ</button>
           <input
             className="grow"
-            aria-label="Filter tags"
-            placeholder="Filter tags…"
+            aria-label="Lọc thẻ"
+            placeholder="Lọc thẻ…"
             value={tagFilter}
             onChange={(e) => setTagFilter(e.target.value)}
           />
@@ -508,9 +508,9 @@ export function Taxonomy() {
             <span key={t.id} className="tag tag-admin-item">
               {t.name} <span className="muted">({t.count})</span>
               <button
-                title="Rename"
+                title="Đổi tên"
                 onClick={() => {
-                  const name = window.prompt("Rename tag", t.name);
+                  const name = window.prompt("Đổi tên thẻ", t.name);
                   if (name && name !== t.name)
                     run(
                       () =>
@@ -522,9 +522,9 @@ export function Taxonomy() {
                 ✎
               </button>
               <button
-                title="Delete"
+                title="Xóa"
                 onClick={() => {
-                  if (window.confirm(`Delete tag "${t.name}"?`))
+                  if (window.confirm(`Xóa thẻ "${t.name}"?`))
                     run(
                       () => api(`/tags/${t.id}`, { method: "DELETE" }),
                       tags.reload,

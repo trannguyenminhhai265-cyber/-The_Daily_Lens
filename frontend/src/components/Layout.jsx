@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useApi } from "../hooks";
+import { categoryLabel } from "../utils";
 import { Avatar } from "./common";
 
 function Header() {
@@ -36,7 +37,7 @@ function Header() {
         <button
           className="icon-btn menu-toggle"
           onClick={() => setMenuOpen((v) => !v)}
-          aria-label="Toggle menu"
+          aria-label="Bật/tắt menu"
         >
           ☰
         </button>
@@ -48,10 +49,10 @@ function Header() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search articles…"
-            aria-label="Search articles"
+            placeholder="Tìm bài viết…"
+            aria-label="Tìm bài viết"
           />
-          <button type="submit" aria-label="Search">
+          <button type="submit" aria-label="Tìm kiếm">
             ⌕
           </button>
         </form>
@@ -68,15 +69,15 @@ function Header() {
               </button>
               {userOpen && (
                 <div className="dropdown">
-                  <Link to="/profile">My profile</Link>
-                  {isAdmin && <Link to="/admin">Admin dashboard</Link>}
+                  <Link to="/profile">Hồ sơ của tôi</Link>
+                  {isAdmin && <Link to="/admin">Trang quản trị</Link>}
                   <button
                     onClick={() => {
                       logout();
                       navigate("/");
                     }}
                   >
-                    Sign out
+                    Đăng xuất
                   </button>
                 </div>
               )}
@@ -84,10 +85,10 @@ function Header() {
           ) : (
             <>
               <Link to="/login" className="btn btn-ghost btn-sm">
-                Sign in
+                Đăng nhập
               </Link>
               <Link to="/register" className="btn btn-primary btn-sm hide-sm">
-                Join
+                Đăng ký
               </Link>
             </>
           )}
@@ -95,18 +96,18 @@ function Header() {
       </div>
       <nav
         className={`cat-nav ${menuOpen ? "open" : ""}`}
-        aria-label="Categories"
+        aria-label="Chuyên mục"
       >
         <div className="container cat-nav-inner">
           <NavLink to="/" end>
-            Latest
+            Mới nhất
           </NavLink>
           {(data ? data.items : []).map((c) => (
             <NavLink key={c.id} to={`/category/${c.slug}`}>
-              {c.name}
+              {categoryLabel(c)}
             </NavLink>
           ))}
-          <NavLink to="/search">Search</NavLink>
+          <NavLink to="/search">Tìm kiếm</NavLink>
         </div>
       </nav>
     </header>
@@ -126,13 +127,13 @@ function Footer() {
           <p className="muted">{settings.tagline}</p>
         </div>
         <div className="footer-links">
-          <Link to="/search">Search</Link>
-          <Link to="/register">Create account</Link>
+          <Link to="/search">Tìm kiếm</Link>
+          <Link to="/register">Tạo tài khoản</Link>
         </div>
       </div>
       <div className="container muted small footer-copy">
         {settings.footer_text ||
-          `© ${new Date().getFullYear()} ${settings.site_name}. Demo project for educational purposes.`}
+          `© ${new Date().getFullYear()} ${settings.site_name}. Dự án demo phục vụ mục đích học tập.`}
       </div>
     </footer>
   );

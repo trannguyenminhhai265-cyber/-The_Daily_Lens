@@ -1,10 +1,11 @@
 // Preserve the screen-facing API shape while using Supabase Auth + PostgreSQL RPC.
 import { getSupabase } from './supabase';
+import { translateError } from './utils';
 export class ApiError extends Error {
   constructor(status, message, details) { super(message); this.status = status; this.details = details; }
 }
 function check({ data, error }) {
-  if (error) throw new ApiError(error.status || ({ '42501': 403, P0002: 404, '23505': 409 }[error.code]) || 400, error.message, error.details);
+  if (error) throw new ApiError(error.status || ({ '42501': 403, P0002: 404, '23505': 409 }[error.code]) || 400, translateError(error.message), error.details);
   return data;
 }
 function sessionId() {
@@ -15,7 +16,7 @@ function sessionId() {
   } catch { return ''; }
 }
 function validatePassword(value) {
-  if (typeof value !== 'string' || value.length < 8 || !/[A-Za-z]/.test(value) || !/\d/.test(value)) throw new ApiError(400, 'Password must contain at least 8 characters, one letter and one number');
+  if (typeof value !== 'string' || value.length < 8 || !/[A-Za-z]/.test(value) || !/\d/.test(value)) throw new ApiError(400, translateError('Password must contain at least 8 characters, one letter and one number'));
 }
 export async function api(path, { method = 'GET', body = {}, params = {} } = {}) {
   const client = getSupabase();

@@ -23,7 +23,7 @@ export default function Article() {
     return (
       <div className="container narrow">
         <ErrorMessage error={error} />
-        <Link to="/">← Back to home</Link>
+        <Link to="/">← Về trang chủ</Link>
       </div>
     );
   if (!data) return null;
@@ -37,13 +37,13 @@ export default function Article() {
           <p className="lede">{doc.summary}</p>
           <div className="byline">
             <div>
-              <strong>{doc.author?.display_name || "Staff"}</strong>
+              <strong>{doc.author?.display_name || "Ban biên tập"}</strong>
               <div className="meta">
                 <time dateTime={doc.created_at}>
                   {formatDate(doc.created_at, { dateStyle: "long" })}
                 </time>
                 <span>·</span>
-                <span>{compact(doc.views_count)} views</span>
+                <span>{compact(doc.views_count)} lượt xem</span>
               </div>
             </div>
             {isAdmin && (
@@ -51,7 +51,7 @@ export default function Article() {
                 to={`/admin/articles/${doc.id}`}
                 className="btn btn-ghost btn-sm byline-edit"
               >
-                Edit
+                Chỉnh sửa
               </Link>
             )}
           </div>
@@ -78,9 +78,9 @@ export default function Article() {
             </div>
             {doc.source_url && /^https?:\/\//i.test(doc.source_url) && (
               <p className="muted small">
-                Source:{" "}
+                Nguồn:{" "}
                 <a href={doc.source_url} target="_blank" rel="noreferrer">
-                  Original article
+                  Bài viết gốc
                 </a>
               </p>
             )}

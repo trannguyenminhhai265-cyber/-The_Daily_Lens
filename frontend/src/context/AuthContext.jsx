@@ -12,7 +12,7 @@ import { supabase, getSupabase } from "../supabase";
 const AuthContext = createContext(null);
 const SITE = {
   site_name: "The Daily Lens",
-  tagline: "News search project",
+  tagline: "Dự án tìm kiếm tin tức",
   allow_registration: true,
 };
 

@@ -40,7 +40,7 @@ export function Login() {
   return (
     <div className="container auth-wrap">
       <form className="auth-card form" onSubmit={submit}>
-        <h1>Sign in</h1>
+        <h1>Đăng nhập</h1>
         <ErrorMessage error={state.error} />
         <label>
           Email
@@ -53,7 +53,7 @@ export function Login() {
           />
         </label>
         <label>
-          Password
+          Mật khẩu
           <input
             type="password"
             autoComplete="current-password"
@@ -63,7 +63,7 @@ export function Login() {
           />
         </label>
         <button className="btn btn-primary btn-block" disabled={state.busy}>
-          {state.busy ? "Signing in…" : "Sign in"}
+          {state.busy ? "Đang đăng nhập…" : "Đăng nhập"}
         </button>
         <button
           type="button"
@@ -71,15 +71,15 @@ export function Login() {
           onClick={recover}
           disabled={state.busy || !form.login.includes("@")}
         >
-          Forgot password?
+          Quên mật khẩu?
         </button>
         {state.recoverySent && (
           <p className="muted">
-            If this email has an account, a recovery link will be sent.
+            Nếu email này có tài khoản, liên kết khôi phục mật khẩu sẽ được gửi tới.
           </p>
         )}
         <p className="muted small">
-          No account yet? <Link to="/register">Create one</Link>
+          Chưa có tài khoản? <Link to="/register">Tạo tài khoản</Link>
         </p>
       </form>
     </div>
@@ -101,7 +101,7 @@ export function Register() {
   const submit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirm) {
-      setState({ busy: false, error: new Error("Passwords do not match") });
+      setState({ busy: false, error: new Error("Mật khẩu nhập lại không khớp") });
       return;
     }
     setState({ busy: true, error: null });
@@ -124,11 +124,11 @@ export function Register() {
     return (
       <div className="container auth-wrap">
         <div className="auth-card">
-          <h1>Check your email</h1>
+          <h1>Kiểm tra email của bạn</h1>
           <p>
-            Open the confirmation link to activate your account, then sign in.
+            Hãy mở liên kết xác nhận trong email để kích hoạt tài khoản, sau đó đăng nhập.
           </p>
-          <Link to="/login">Back to sign in</Link>
+          <Link to="/login">Quay lại đăng nhập</Link>
         </div>
       </div>
     );
@@ -136,20 +136,20 @@ export function Register() {
   return (
     <div className="container auth-wrap">
       <form className="auth-card form" onSubmit={submit}>
-        <h1>Create your account</h1>
+        <h1>Tạo tài khoản</h1>
         <ErrorMessage error={state.error} />
         <label>
-          Username
+          Tên đăng nhập
           <input
             value={form.username}
             onChange={set("username")}
             pattern="[a-zA-Z0-9_]{3,30}"
-            title="3-30 letters, numbers or underscores"
+            title="3-30 ký tự gồm chữ cái, chữ số hoặc dấu gạch dưới"
             required
           />
         </label>
         <label>
-          Display name
+          Tên hiển thị
           <input
             value={form.display_name}
             onChange={set("display_name")}
@@ -166,7 +166,7 @@ export function Register() {
           />
         </label>
         <label>
-          Password
+          Mật khẩu
           <input
             type="password"
             autoComplete="new-password"
@@ -176,11 +176,11 @@ export function Register() {
             required
           />
           <span className="hint">
-            At least 8 characters with a letter and a number.
+            Tối thiểu 8 ký tự, gồm chữ cái và chữ số.
           </span>
         </label>
         <label>
-          Confirm password
+          Nhập lại mật khẩu
           <input
             type="password"
             autoComplete="new-password"
@@ -190,10 +190,10 @@ export function Register() {
           />
         </label>
         <button className="btn btn-primary btn-block" disabled={state.busy}>
-          {state.busy ? "Creating…" : "Create account"}
+          {state.busy ? "Đang tạo…" : "Tạo tài khoản"}
         </button>
         <p className="muted small">
-          Already registered? <Link to="/login">Sign in</Link>
+          Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
         </p>
       </form>
     </div>
@@ -207,7 +207,7 @@ export function ResetPassword() {
   const submit = async (e) => {
     e.preventDefault();
     if (password !== confirm) {
-      setState({ error: new Error("Passwords do not match") });
+      setState({ error: new Error("Mật khẩu nhập lại không khớp") });
       return;
     }
     setState({ busy: true });
@@ -221,20 +221,20 @@ export function ResetPassword() {
   return (
     <div className="container auth-wrap">
       <form className="auth-card form" onSubmit={submit}>
-        <h1>Reset password</h1>
+        <h1>Đặt lại mật khẩu</h1>
         <ErrorMessage error={state.error} />
         {state.ok ? (
           <p>
-            Password updated. <Link to="/login">Sign in</Link>
+            Đã cập nhật mật khẩu. <Link to="/login">Đăng nhập</Link>
           </p>
         ) : (
           <>
             <p className="muted">
-              Open the recovery link from your email before setting a new
-              password.
+              Hãy mở liên kết khôi phục trong email trước khi đặt mật khẩu
+              mới.
             </p>
             <label>
-              New password
+              Mật khẩu mới
               <input
                 type="password"
                 autoComplete="new-password"
@@ -245,7 +245,7 @@ export function ResetPassword() {
               />
             </label>
             <label>
-              Confirm password
+              Nhập lại mật khẩu
               <input
                 type="password"
                 autoComplete="new-password"
@@ -256,7 +256,7 @@ export function ResetPassword() {
               />
             </label>
             <button className="btn btn-primary" disabled={state.busy}>
-              Save password
+              Lưu mật khẩu
             </button>
           </>
         )}

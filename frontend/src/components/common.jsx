@@ -2,7 +2,7 @@ import { Link, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { initials } from "../utils";
 
-export function Spinner({ label = "Loading…" }) {
+export function Spinner({ label = "Đang tải…" }) {
   return (
     <div className="spinner" role="status">
       <span className="spinner-dot" />
@@ -47,9 +47,9 @@ export function Pagination({ page, pages, onChange }) {
   const end = Math.min(pages, page + 2);
   for (let i = start; i <= end; i += 1) nums.push(i);
   return (
-    <nav className="pagination" aria-label="Pagination">
+    <nav className="pagination" aria-label="Phân trang">
       <button disabled={page <= 1} onClick={() => onChange(page - 1)}>
-        ‹ Prev
+        ‹ Trước
       </button>
       {start > 1 && (
         <>
@@ -74,7 +74,7 @@ export function Pagination({ page, pages, onChange }) {
         </>
       )}
       <button disabled={page >= pages} onClick={() => onChange(page + 1)}>
-        Next ›
+        Sau ›
       </button>
     </nav>
   );
@@ -96,7 +96,7 @@ export function RequireAuth({ children, adminOnly = false }) {
     return (
       <div className="container narrow">
         <div className="alert alert-error">
-          You do not have permission to view this page.
+          Bạn không có quyền xem trang này.
         </div>
       </div>
     );
