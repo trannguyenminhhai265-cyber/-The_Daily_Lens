@@ -42,7 +42,7 @@ function Header() {
           ☰
         </button>
         <Link to="/" className="brand">
-          <span className="brand-mark">L</span>
+          <img className="brand-mark" src="/logo-mark.png" alt="" />
           <span className="brand-name">{settings.site_name}</span>
         </Link>
         <form className="header-search" onSubmit={submit} role="search">
@@ -121,7 +121,7 @@ function Footer() {
       <div className="container footer-inner">
         <div>
           <div className="brand footer-brand">
-            <span className="brand-mark">L</span>
+            <img className="brand-mark" src="/logo-mark.png" alt="" />
             <span className="brand-name">{settings.site_name}</span>
           </div>
           <p className="muted">{settings.tagline}</p>
