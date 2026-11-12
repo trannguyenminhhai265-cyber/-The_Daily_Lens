@@ -4,9 +4,13 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/((?!assets/|robots.txt).*)",
+      "source": "/((?!api/|assets/|robots.txt).*)",
       "destination": "/index.html"
     }
   ],
+  "functions": {
+    "api/search.js": { "maxDuration": 15 },
+    "api/admin/index-document.js": { "maxDuration": 60 }
+  },
   "installCommand": "bun install --frozen-lockfile"
 }
