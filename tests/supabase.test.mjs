@@ -17,6 +17,8 @@ for (const file of readdirSync('supabase/migrations').filter(file => file.endsWi
       insert into public.search_logs(query_string,event,session_id) values('legacy','search','seed-1');
       insert into public.likes(user_id,document_id) values('${reader}','20000000-0000-4000-8000-000000000001');`);
   }
+  // PGlite has no pgvector; this migration is only verifiable against a real Supabase/Postgres with the extension.
+  if (file.includes('vector_search')) { console.log('Skipped', file, '(needs pgvector)'); continue; }
   await db.exec(readFileSync(`supabase/migrations/${file}`, 'utf8'));
   console.log('Applied', file);
 }
@@ -24,7 +26,10 @@ async function as(id) { await db.exec('reset role'); await db.query("select set_
 async function api(path, method = 'GET', body = {}, params = {}) { return (await db.query('select public.portal_api($1,$2,$3,$4,$5) result', [path, method, JSON.stringify(body), JSON.stringify(params), 'test-session'])).rows[0].result; }
 async function denied(fn) { await assert.rejects(fn, /Permission denied|Authentication required|permission denied|Access denied|Admin/i); }
 const tables = (await db.query("select tablename from pg_tables where schemaname='public' order by tablename")).rows.map(row => row.tablename);
-assert.deepEqual(tables, ['categories','document_tags','documents','profiles','search_logs','tags']);
+assert.deepEqual(tables, ['categories','document_tags','documents','profiles','search_index_status','search_logs','tags']);
+// Search engine part 1: the historical document was queued by the backfill; legacy logs are labelled keyword/text.
+assert.deepEqual((await db.query("select processed from public.search_index_status where document_id='20000000-0000-4000-8000-000000000001'")).rows, [{processed:false}]);
+assert.deepEqual((await db.query("select engine,query_type from public.search_logs where session_id='seed-1'")).rows, [{engine:'keyword',query_type:'text'}]);
 assert.equal((await db.query('select count(*) as count from archive.likes')).rows[0].count,1);
 assert.equal((await db.query('select count(*) as count from archive.documents')).rows[0].count,1);
 assert.equal((await db.query("select source_url from public.documents where slug='legacy-article'")).rows[0].source_url, 'https://example.test/source');
@@ -46,8 +51,74 @@ const synthetic = await api('/admin/search-logs','GET',{}, {source:'synthetic'})
 const collected = await api('/admin/search-logs','GET',{}, {source:'real'}); assert.equal(collected.total,2); assert(collected.items.every(log=>!log.is_synthetic));
 await api(`/manage/documents/${doc.id}`,'PUT',{title:'Updated article',summary:'Updated',content:'<p>New content</p>',category_id:cat.id,tags:['AI']});
 assert.equal((await api(`/manage/documents/${doc.id}`)).document.title,'Updated article');
+// Indexing queue: edits that change embedded fields re-queue the document; views and no-op saves do not.
+const owner = async sql => { await db.exec('reset role'); return (await db.query(sql)).rows; };
+const queued = async () => (await owner(`select processed from public.search_index_status where document_id='${doc.id}'`))[0].processed;
+assert.equal(await queued(), false);
+await owner(`update public.search_index_status set processed=true where document_id='${doc.id}'`);
+await as(null); await api(`/documents/${doc.slug}`); await as(admin);
+assert.equal(await queued(), true);
+await as(admin); await api(`/manage/documents/${doc.id}`,'PUT',{title:'Updated article',summary:'Updated',content:'<p>New content</p>',category_id:cat.id,tags:['AI']});
+assert.equal(await queued(), true);
+await api(`/manage/documents/${doc.id}`,'PUT',{title:'Updated article',summary:'Updated',content:'<p>Changed again</p>',category_id:cat.id,tags:['AI']});
+assert.equal(await queued(), false);
+// Search logs: image searches need no text, text searches still do, and an image search is always a vector search.
+await owner(`insert into public.search_logs(query_string,event,engine,query_type) values('','search','vector','image')`);
+await assert.rejects(() => owner(`insert into public.search_logs(query_string,event) values('  ','search')`));
+await assert.rejects(() => owner(`insert into public.search_logs(query_string,event,engine,query_type) values('','search','keyword','image')`));
+// Search click logging: engine is whitelisted (keyword/vector/hybrid, anything else -> keyword), query_type defaults to text.
+const ownerExec = async sql => { await db.exec('reset role'); await db.exec(sql); };
+const legacyId = '20000000-0000-4000-8000-000000000001';
+await as(null);
+for (const [engine, expected] of [['vector','vector'],['hybrid','hybrid'],['keyword','keyword'],['bogus','keyword'],[undefined,'keyword'],[null,'keyword']])
+  await api('/search/click','POST',{query_string:`engine-${engine}`,clicked_doc_id:doc.id,position:1,...(engine === undefined ? {} : {engine})});
+await api('/search/click','POST',{query_string:'',clicked_doc_id:doc.id,position:2,engine:'keyword',query_type:'image'});
+await api('/search/click','POST',{query_string:'typed',clicked_doc_id:doc.id,position:3,engine:'vector',query_type:'nonsense'});
+await as(admin);
+const clickRows = (await owner(`select query_string,engine,query_type from public.search_logs where event='click' and session_id='test-session' order by query_string`));
+const byQuery = Object.fromEntries(clickRows.map(row => [row.query_string,row]));
+assert.equal(byQuery['engine-vector'].engine,'vector'); assert.equal(byQuery['engine-hybrid'].engine,'hybrid'); assert.equal(byQuery['engine-keyword'].engine,'keyword');
+assert.equal(byQuery['engine-bogus'].engine,'keyword'); assert.equal(byQuery['engine-undefined'].engine,'keyword'); assert.equal(byQuery['engine-null'].engine,'keyword');
+assert(clickRows.every(row => row.query_string === '' ? row.query_type === 'image' : row.query_type === 'text'));
+assert.equal(byQuery[''].engine,'vector'); assert.equal(byQuery[''].query_type,'image'); // image clicks are always vector
+assert.equal(byQuery['typed'].query_type,'text'); assert.equal(byQuery['typed'].engine,'vector');
+await as(null); await assert.rejects(() => api('/search/click','POST',{query_string:'  ',clicked_doc_id:doc.id,position:1})); // text click still needs text
+// /admin/search-logs filters by engine and query_type and returns both columns.
+await as(admin);
+const vectorLogs = await api('/admin/search-logs','GET',{}, {engine:'vector'});
+assert(vectorLogs.total >= 3 && vectorLogs.items.every(log => log.engine==='vector' && log.query_type));
+assert.equal((await api('/admin/search-logs','GET',{}, {engine:'hybrid'})).total,1);
+const imageLogs = await api('/admin/search-logs','GET',{}, {query_type:'image'});
+assert(imageLogs.total >= 2 && imageLogs.items.every(log => log.query_type==='image' && log.engine==='vector'));
+const textKeyword = await api('/admin/search-logs','GET',{}, {engine:'keyword',query_type:'text'});
+assert(textKeyword.total >= 1 && textKeyword.items.every(log => log.engine==='keyword' && log.query_type==='text'));
+assert.equal((await api('/admin/search-logs')).total, (await api('/admin/search-logs','GET',{}, {engine:'',query_type:''})).total);
+// /admin/search-engine: admin only, fixed shape, errors first. image_embeddings is stubbed because PGlite has no pgvector.
+await as(null); await denied(() => api('/admin/search-engine')); await as(reader); await denied(() => api('/admin/search-engine')); await as(admin);
+let engine = await api('/admin/search-engine');
+assert.deepEqual(Object.keys(engine).sort(),['documents','images_embedded','images_expected','indexed','pending','total']);
+assert.deepEqual([engine.total,engine.indexed,engine.pending,engine.images_embedded,engine.images_expected],[2,0,2,0,0]);
+await ownerExec(`update public.documents set cover_url='https://example.test/cover.png' where id='${doc.id}'; update public.search_index_status set last_error='boom' where document_id='${legacyId}'`);
+engine = await api('/admin/search-engine');
+assert.equal(engine.images_expected,1); assert.equal(engine.documents.length,2);
+assert.deepEqual(Object.keys(engine.documents[0]).sort(),['has_image','id','image_embedded','last_error','processed','title','updated_at']);
+assert.deepEqual(engine.documents.map(row => row.id),[legacyId,doc.id]); // errored document first
+assert.equal(engine.documents[0].last_error,'boom'); assert.equal(engine.documents[1].last_error,null);
+assert.deepEqual(engine.documents.map(row => [row.processed,row.has_image,row.image_embedded]),[[false,false,false],[false,true,false]]);
+await ownerExec(`create table public.image_embeddings(document_id uuid, image_url text); insert into public.image_embeddings values('${doc.id}','https://example.test/old.png')`);
+assert.equal((await api('/admin/search-engine')).images_embedded,0); // embedding of a replaced cover does not count
+await ownerExec(`insert into public.image_embeddings values('${doc.id}','https://example.test/cover.png'); update public.search_index_status set processed=true where document_id='${doc.id}'`);
+engine = await api('/admin/search-engine');
+assert.deepEqual([engine.indexed,engine.pending,engine.images_embedded,engine.images_expected],[1,1,1,1]);
+assert.deepEqual(engine.documents.map(row => [row.id,row.processed,row.image_embedded]),[[legacyId,false,false],[doc.id,true,true]]);
+await ownerExec(`drop table public.image_embeddings; update public.search_index_status set last_error=null where document_id='${legacyId}'`);
+await as(admin);
+// Browser roles cannot read or write the queue.
+await as(reader); await denied(() => db.exec('select * from public.search_index_status')); await denied(() => db.exec('update public.search_index_status set processed=true'));
+await as(admin);
 await assert.rejects(() => api(`/categories/${cat.id}`,'DELETE'));
 await api(`/manage/documents/${doc.id}`,'DELETE'); assert.equal((await api('/manage/documents')).total,1);
+assert.equal((await owner(`select count(*)::int as count from public.search_index_status where document_id='${doc.id}'`))[0].count,0); await as(admin);
 await api(`/categories/${cat.id}`,'DELETE');
 for (const path of ['/admin/users','/admin/settings','/moderation/comments','/analytics/overview']) await assert.rejects(() => api(path));
 await as(null); await assert.rejects(() => api(`/documents/${doc.id}`));

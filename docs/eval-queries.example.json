@@ -1,0 +1,5 @@
+[
+  {"query": "chip bán dẫn", "relevant_ids": [5, 6, 7], "type": "normal", "note": "VÍ DỤ, không phải nhãn thật. Cần người khác soạn lại tập query và nhãn."},
+  {"query": "Dung Quất", "relevant_ids": [61], "type": "normal", "note": "VÍ DỤ, không phải nhãn thật. Cần người khác soạn lại tập query và nhãn."},
+  {"query": "công thức nấu bánh xèo", "relevant_ids": [], "type": "junk", "note": "VÍ DỤ, không phải nhãn thật. Cần người khác soạn query rác riêng."}
+]

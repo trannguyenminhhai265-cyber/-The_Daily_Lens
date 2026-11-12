@@ -57,3 +57,32 @@ export async function api(path, { method = 'GET', body = {}, params = {} } = {})
   }
   return rpc(path, method, body, params);
 }
+
+async function accessToken() {
+  try {
+    const { data } = await getSupabase().auth.getSession();
+    return data?.session?.access_token || '';
+  } catch { return ''; }
+}
+
+/**
+ * POST JSON to a Vercel function under /api (not the Supabase RPC).
+ * Sends the Supabase access token when signed in. Non-2xx responses throw an
+ * ApiError whose message is the server's `error` code and whose details hold the body.
+ */
+export async function callApi(path, body = {}, { signal } = {}) {
+  const headers = { 'Content-Type': 'application/json' };
+  const token = await accessToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  headers['x-session-id'] = sessionId();
+  const res = await fetch(path, { method: 'POST', headers, body: JSON.stringify(body), signal });
+  let data = null;
+  try { data = await res.json(); } catch { /* empty or non-JSON body */ }
+  if (!res.ok) throw new ApiError(res.status, (data && data.error) || `http_${res.status}`, data);
+  return data;
+}
+
+/** Ask the server to (re)build embeddings for one document. Admin only. */
+export function indexDocument(documentId, options) {
+  return callApi('/api/admin/index-document', { document_id: documentId }, options);
+}

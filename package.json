@@ -2,14 +2,16 @@
   "name": "news-magazine-portal",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "The Daily Lens - React/Vite on Vercel with Supabase Auth, PostgreSQL and search logging",
   "scripts": {
     "dev": "bun run --cwd frontend dev",
     "build": "bun run --cwd frontend build",
     "preview": "bun run --cwd frontend preview",
-    "test": "bun tests/supabase.test.mjs",
+    "test": "bun tests/supabase.test.mjs && bun test tests/api.test.mjs tests/index-all.test.mjs",
     "seed": "bun scripts/seed-supabase.mjs",
-    "test:live": "bun scripts/smoke-supabase.mjs"
+    "test:live": "bun scripts/smoke-supabase.mjs",
+    "index": "bun scripts/index-all.mjs"
   },
   "engines": {
     "bun": ">=1.4.4"
@@ -23,5 +25,9 @@
   ],
   "trustedDependencies": [
     "esbuild"
-  ]
+  ],
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "sharp": "^0.35.5"
+  }
 }
