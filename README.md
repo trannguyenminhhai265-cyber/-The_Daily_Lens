@@ -42,7 +42,7 @@ Chỉ có `admin` và `user`. Vai trò nằm trong database; tự sửa metadata
 
 Không chỉ ẩn menu: các endpoint đã bỏ không còn được RPC phục vụ. Snapshot cũ chỉ nằm trong `archive`, ngoài schema hoạt động của ứng dụng.
 
-## Database đang dùng: 6 bảng
+## Database đang dùng: 9 bảng
 
 | Bảng | Nội dung |
 |---|---|
@@ -51,13 +51,42 @@ Không chỉ ẩn menu: các endpoint đã bỏ không còn được RPC phục 
 | `categories` | `id`, `name`, `slug`, timestamps |
 | `tags` | `id`, `name`, `slug`, timestamps |
 | `document_tags` | Bảng liên kết bài viết–tag, khóa chính kép |
-| `search_logs` | `id`, `user_id`, `query_string`, `clicked_doc_id`, `timestamp`, `event`, `session_id`, `position`, `results_count`, `is_synthetic` |
+| `search_logs` | `id`, `user_id`, `query_string`, `clicked_doc_id`, `timestamp`, `event`, `session_id`, `position`, `results_count`, `is_synthetic`, `engine` (`keyword` hoặc `vector`, mặc định `keyword`), `query_type` (`text` hoặc `image`, mặc định `text`); `query_string` rỗng khi tìm bằng ảnh |
+| `search_index_status` | `document_id`, `processed`, `last_error`, `updated_at`; hàng chờ index. Thêm bài, hoặc đổi `title`, `summary`, `content_text`, `cover_url`, đưa bài về trạng thái chưa xử lý |
+| `document_embeddings` | `document_id`, `embedding` (vector 768), `model`, `updated_at`; một vector cho mỗi bài |
+| `image_embeddings` | `id`, `document_id`, `image_url`, `embedding` (vector 768), `model`, `updated_at`; duy nhất theo (`document_id`, `image_url`) |
 
 `tags` trong dataset phẳng được JOIN từ `document_tags` và `tags`. `content_text` phục vụ indexing; `content` giữ cách hiển thị bài. `source_url` giữ nguồn bài viết (không phải metadata SEO).
 
 Log `search` có `clicked_doc_id = NULL`; log `click` có ID bài được chọn. Khách chưa đăng nhập có `user_id = NULL`, nhóm theo `session_id`. Log seed được đánh dấu `is_synthetic = true`, không dùng để tuyên bố chất lượng tìm kiếm với người dùng thật.
 
-Tìm kiếm hiện tại mới là baseline khớp từ trong title/summary/content_text, chưa có inverted index/TF-IDF/BM25. Phần đó là công việc triển khai search engine tiếp theo.
+Tìm kiếm gồm hai cột (đang triển khai, xem `docs/search-engine-tasks.md`):
+
+- Cột trái, từ khóa: mọi từ trong câu tìm phải xuất hiện trong title, summary hoặc content_text. Chưa có inverted index, TF-IDF hay BM25.
+- Cột phải, ngữ nghĩa: embedding bằng Gemini `gemini-embedding-2` ở 768 chiều, lưu trong pgvector và tìm bằng quét chính xác (không dùng index xấp xỉ). Người dùng cũng có thể tìm bằng ảnh; khi đó chỉ cột ngữ nghĩa hiện kết quả.
+
+Migration `202611130001` và `202611130002` chưa áp dụng lên Supabase thật, và migration vector chưa được chạy trên Postgres có pgvector. Ba bảng tìm kiếm mới chỉ `service_role` được truy cập.
+
+## Biến môi trường server và lập chỉ mục
+
+Các biến này chỉ đọc ở phía server (function hoặc script quản trị), không có tiền tố `VITE_`:
+
+- `GEMINI_API_KEY`: khóa gọi Gemini API để tạo embedding. Khóa không đi vào frontend.
+- `SUPABASE_URL`: URL project Supabase.
+- `SUPABASE_SERVICE_ROLE_KEY`: secret key, dùng để ghi bảng embedding và `search_index_status`. Không in ra log.
+- `SEARCH_DAILY_CAP`: trần số lượt query gọi Gemini mỗi ngày, áp dụng toàn hệ thống.
+
+```sh
+bun run index   # index các bài đang chờ trong search_index_status
+```
+
+Lệnh `bun run index`, hàm server và `.env.example` cho các biến trên chưa có trong repo; xem mục B của `docs/search-engine-tasks.md`.
+
+Lưu ý dữ liệu và mô hình:
+
+- Nội dung bài (title, summary, đoạn văn), ảnh bìa và câu query được gửi tới Google để tạo embedding. Ảnh người dùng tải lên không được lưu.
+- `gemini-embedding-2` là hộp đen: không biết dữ liệu huấn luyện và cách biểu diễn bên trong. Đây không phải EmbeddingGemma 2.
+- Log seed (`is_synthetic = true`) là dữ liệu mô phỏng. Không dùng để kết luận chất lượng tìm kiếm với người dùng thật.
 
 ## Code và quyền
 
