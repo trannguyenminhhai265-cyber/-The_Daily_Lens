@@ -59,6 +59,11 @@ const CATEGORY_LABELS = {
   culture: "Văn hóa",
   sports: "Thể thao",
   environment: "Môi trường",
+  news: "Thời sự",
+  law: "Pháp luật",
+  world: "Thế giới",
+  education: "Giáo dục",
+  lifestyle: "Đời sống",
 };
 
 export function categoryLabel(category) {
