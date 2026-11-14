@@ -67,7 +67,7 @@ export function Articles() {
           <option value="">Tất cả chuyên mục</option>
           {categories.data?.items.map((c) => (
             <option key={c.id} value={c.slug}>
-              {c.name}
+              {categoryLabel(c)}
             </option>
           ))}
         </select>
@@ -284,7 +284,7 @@ export function ArticleEditor() {
                 <option value="">Chọn…</option>
                 {categories.data?.items.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.name}
+                    {categoryLabel(c)}
                   </option>
                 ))}
               </select>
